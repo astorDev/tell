@@ -25,7 +25,7 @@ deploy:
 """;
 
         var tokens = MakefileLexer.Tokenizer.Tokenize(makefile);
-        var doc = MakefileParser.DocumentParser.Parse(tokens);
+        var doc = MakefileDocument.Parser.Parse(tokens);
 
         var docJson = JsonSerializer.Serialize(doc, new JsonSerializerOptions
         {
@@ -66,7 +66,7 @@ run:
 """;
 
         var tokens = MakefileLexer.Tokenizer.Tokenize(makefile);
-        var doc = MakefileParser.DocumentParser.Parse(tokens);
+        var doc = MakefileDocument.Parser.Parse(tokens);
 
         doc.Assignments.ShouldBeEmpty();
         doc.Rules.Length.ShouldBe(1);
@@ -85,7 +85,7 @@ deploy:
 """;
 
         var tokens = MakefileLexer.Tokenizer.Tokenize(makefile);
-        var doc = MakefileParser.DocumentParser.Parse(tokens);
+        var doc = MakefileDocument.Parser.Parse(tokens);
 
         doc.Assignments.ShouldBeEmpty();
         doc.Rules.Length.ShouldBe(1);
@@ -119,7 +119,7 @@ deploy: run
 """;
 
         var tokens = MakefileLexer.Tokenizer.Tokenize(makefile);
-        var doc = MakefileParser.DocumentParser.Parse(tokens);
+        var doc = MakefileDocument.Parser.Parse(tokens);
 
         doc.Assignments.ShouldBeEmpty();
         doc.Rules.Length.ShouldBe(2);
@@ -146,7 +146,7 @@ deploy: run
 """;
 
         var tokens = MakefileLexer.Tokenizer.Tokenize(fragment);
-        var recipe = MakefileParser.RecipeLine.Parse(tokens);
+        var recipe = MakefileRecipe.Parser.Parse(tokens);
 
         recipe.Tokens.Select(t => t.ToStringValue()).ShouldBe(["dotnet", "run"]);
     }
