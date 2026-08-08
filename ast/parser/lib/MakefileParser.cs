@@ -4,17 +4,22 @@ global using Superpower.Parsers;
 
 namespace Tell;
 
-public record MakefileDocument(MakefileVariableAssignment[] Assignments, MakefileRule[] Rules, MakefileBlanks[] Blanks)
+public record MakefileDocument(MakefileVariableAssignment[] Assignments, MakefileRule[] Rules)
 {
+    public static readonly TokenListParser<MakefileTokenKind, Unit> Blank =
+        Token.EqualTo(MakefileTokenKind.NewLine).Value(Unit.Value)
+            .Or(Token.EqualTo(MakefileTokenKind.Comment)
+                .IgnoreThen(Token.EqualTo(MakefileTokenKind.NewLine))
+                .Value(Unit.Value));
+
     public static readonly TokenListParser<MakefileTokenKind, MakefileDocument> Parser =
         from items in MakefileVariableAssignment.Parser.Select(a => (object?)a)
             .Or(MakefileRule.Parsers.Select(r => (object?)r))
-            .Or(MakefileBlanks.Parser.Value((object?)null))
+            .Or(Blank.Value((object?)null))
             .Many()
         select new MakefileDocument(
             items.OfType<MakefileVariableAssignment>().ToArray(),
-            items.OfType<MakefileRule>().ToArray(),
-            items.OfType<MakefileBlanks>().ToArray()
+            items.OfType<MakefileRule>().ToArray()
         );
 
     public static MakefileDocument Parse(string input)
@@ -22,10 +27,4 @@ public record MakefileDocument(MakefileVariableAssignment[] Assignments, Makefil
         var tokens = MakefileLexer.Tokenizer.Tokenize(input);
         return Parser.Parse(tokens);
     }
-}
-
-public class MakefileParser
-{
-    public static readonly TokenListParser<MakefileTokenKind, Token<MakefileTokenKind>> Word =
-        Token.EqualTo(MakefileTokenKind.Word);
 }
