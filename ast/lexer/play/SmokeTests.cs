@@ -6,28 +6,18 @@ public class SmokeTests
     [TestMethod]
     public void Main()
     {
-        var exampleMakefile = """
-            # Project settings
-            AUTHOR = dev@example.com
-            ENV ?= dev
-            ARGS += --verbose
-            COMPOSE := docker-compose -f $(ENV).yml
-            LOG_CMD != date --format=%Y-%m-%d
-            TAG := v1::beta
+        var makefile = 
+"""
+TEST ?= main
 
-            run:
-            	@$(COMPOSE) up \
-            		--detach
+run:
+    dotnet run
 
-            stop: run
-            	@$(COMPOSE) down
+kill:
+    kill lsof -t -i:52873
+""";
 
-            deploy::
-            	@echo $(subst dev,prod,$(ENV))
-            	@printf Status:%s $(ENV)
-            """;
-
-        var tokens = MakefileLexer.Tokenizer.Tokenize(exampleMakefile).ToArray();
+        var tokens = MakefileLexer.Tokenizer.Tokenize(makefile).ToArray();
 
         foreach (var token in tokens)
         {

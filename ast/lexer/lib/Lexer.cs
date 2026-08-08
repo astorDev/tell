@@ -8,7 +8,7 @@ public static class MakefileLexer
 {
     public static readonly Tokenizer<MakefileTokenKind> Tokenizer =
         new TokenizerBuilder<MakefileTokenKind>()
-            .Ignore(Span.Regex(@"[ ]+"))
+            .Ignore(Span.Regex(@"(?:(?!    )[ ])+"))
             .Match(Span.Regex(@"#[^\n]*"), MakefileTokenKind.Comment)
             .Match(Span.EqualTo("::"), MakefileTokenKind.DoubleColon)
             .Match(Span.EqualTo(":="), MakefileTokenKind.ColonEquals)
@@ -23,6 +23,7 @@ public static class MakefileLexer
             .Match(Span.EqualTo("%"), MakefileTokenKind.Percent)
             .Match(Span.EqualTo("@"), MakefileTokenKind.At)
             .Match(Span.EqualTo(","), MakefileTokenKind.Comma)
+            .Match(Span.EqualTo("    "), MakefileTokenKind.Tab)
             .Match(Span.EqualTo("\t"), MakefileTokenKind.Tab)
             .Match(Span.Regex(@"\r?\n"), MakefileTokenKind.NewLine)
             .Match(Span.Regex(@"[A-Za-z0-9_\-./]+"), MakefileTokenKind.Word)
