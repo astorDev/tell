@@ -1,6 +1,6 @@
 namespace Tell;
 
-public record AssignmentOperator(Token<MakefileTokenKind> Operator)
+public record MakefileAssignmentOperator(Token<MakefileTokenKind> Operator)
 {
     public static readonly TokenListParser<MakefileTokenKind, Token<MakefileTokenKind>> Parser =
         Token.EqualTo(MakefileTokenKind.Equals)
