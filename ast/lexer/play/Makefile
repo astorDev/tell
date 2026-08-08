@@ -23,4 +23,4 @@ v-play:
 	make play
 
 test:
-	dotnet test --filter FullyQualifiedName~Tell.Ast.Lexer.Playground.$(NAME) --logger "console;verbosity=detailed"
+	dotnet test --filter FullyQualifiedName~Tell.$(NAME) --logger "console;verbosity=detailed"
