@@ -1,7 +1,5 @@
 <Solution>
-  <Folder Name="/inspirations/" />
-  <Folder Name="/inspirations/makefile/" />
-  <Folder Name="/inspirations/makefile/play/">
+    <Project Path="ast/lexer/lib/Tell.Ast.Lexer.csproj" />
+    <Project Path="ast/lexer/play/Tell.Ast.Lexer.Playground.csproj" />
     <Project Path="inspirations/makefile/play/Tell.Inspirations.Makefile.Playground.csproj" />
-  </Folder>
 </Solution>
