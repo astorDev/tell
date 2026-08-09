@@ -1,4 +1,6 @@
 <Solution>
+    <Project Path="recipe/lexer/play/Tell.Recipe.Lexer.Playground.csproj" />
+    <Project Path="recipe/lexer/lib/Tell.Recipe.Lexer.csproj" />
     <Project Path="ast/lexer/lib/Tell.Ast.Lexer.csproj" />
     <Project Path="ast/lexer/play/Tell.Ast.Lexer.Playground.csproj" />
     <Project Path="inspirations/makefile/play/Tell.Inspirations.Makefile.Playground.csproj" />
