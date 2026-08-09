@@ -3,14 +3,7 @@
     <Project Path="recipe/lexer/lib/Tell.Recipe.Lexer.csproj" />
     <Project Path="recipe/parser/lib/Tell.Recipe.Parser.csproj" />
     <Project Path="recipe/parser/play/Tell.Recipe.Parser.Playground.csproj" />
-    <Folder Name="/recipe/" />
-    <Folder Name="/recipe/runner/" />
-    <Folder Name="/recipe/runner/lib/">
-        <Project Path="recipe/runner/lib/Tell.Recipe.Runner.csproj" />
-    </Folder>
-    <Folder Name="/recipe/runner/play/">
-        <Project Path="recipe/runner/play/Tell.Recipe.Runner.Playground.csproj" />
-    </Folder>
+    <Project Path="recipe/runner/play/Tell.Recipe.Runner.Playground.csproj" />
     <Project Path="ast/lexer/lib/Tell.Ast.Lexer.csproj" />
     <Project Path="ast/lexer/play/Tell.Ast.Lexer.Playground.csproj" />
     <Project Path="inspirations/makefile/play/Tell.Inspirations.Makefile.Playground.csproj" />
