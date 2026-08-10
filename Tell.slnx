@@ -9,4 +9,6 @@
     <Project Path="inspirations/makefile/play/Tell.Inspirations.Makefile.Playground.csproj" />
     <Project Path="ast/parser/play/Tell.Parser.Playground.csproj" />
     <Project Path="ast/parser/lib/Tell.Ast.Parser.csproj" />
+    <Project Path="vars/use/lexer/lib/Tell.Vars.Use.Lexer.csproj" />
+    <Project Path="vars/use/lexer/play/Tell.Vars.Use.Lexer.Playground.csproj" />
 </Solution>
