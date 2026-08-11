@@ -1,7 +1,7 @@
-using Superpower;
-using Superpower.Model;
-using Superpower.Parsers;
-using Superpower.Tokenizers;
+global using Superpower;
+global using Superpower.Model;
+global using Superpower.Parsers;
+global using Superpower.Tokenizers;
 
 namespace Tell;
 
