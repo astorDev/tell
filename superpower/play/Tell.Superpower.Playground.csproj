@@ -4,7 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Tell.Playground</RootNamespace>
+    <RootNamespace>Playground</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +17,6 @@
     <PackageReference Include="NiceShell.Cli" Version="2026.108.104.12" />
     <PackageReference Include="NiceShell.Logger" Version="2026.108.101.5" />
     <PackageReference Include="Shouldly" Version="4.3.0" />
-    <PackageReference Include="Superpower" Version="3.2.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,8 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\lib\Tell.Recipe.Lexer.csproj" />
-    <ProjectReference Include="..\..\..\superpower\lib\Tell.Superpower.csproj" />
+    <ProjectReference Include="..\lib\Tell.Superpower.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
 TEST ?= main
-ARGS ?= tokens "	dotnet run --environment prod"
+ARGS ?= tell.superpower . --name John
 
 run:
 	dotnet run -- $(ARGS)
@@ -15,4 +15,4 @@ run-v:
 	make run
 
 test:
-	dotnet test --filter FullyQualifiedName~Tell.Playground.$(TEST) --logger "console;verbosity=detailed"
+	dotnet test --filter FullyQualifiedName~Tell.Superpower.Playground.Playground.$(NAME) --logger "console;verbosity=detailed"
