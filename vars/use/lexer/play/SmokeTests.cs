@@ -1,3 +1,5 @@
+using Tell.Vars.Use.Lexer;
+
 namespace Playground;
 
 [TestClass]
@@ -6,10 +8,14 @@ public class SmokeTests
     [TestMethod]
     public void Basic()
     {
-        var hello = "Hello, Tests!";
+        var recipe = 
+"""
+prt:
+    echo "Hello, $(NAME)!"
+""";
 
-        Console.WriteLine(hello);
-
-        hello.ShouldBe("Hello, Tests!");
+        var tokens = VarUseTokens.Tokenizer.TryTokenize(recipe);
+        
+        foreach (var token in tokens.Value) Console.WriteLine(token);
     }
 }
