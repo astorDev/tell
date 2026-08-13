@@ -1,4 +1,5 @@
-﻿using Superpower;
+﻿using System.Text.RegularExpressions;
+using Superpower;
 using Superpower.Model;
 using Superpower.Parsers;
 using Superpower.Tokenizers;
@@ -8,6 +9,13 @@ namespace Tell;
 public class Anything
 {
     public static readonly TextParser<TextSpan> TextSpan = Span.Regex(".*");
+
+    public static TextParser<TextSpan> Before(params string[] delimiters)
+    {
+        var alternatives = string.Join("|", delimiters.Select(Regex.Escape));
+
+        return Span.Regex($@"^(?:(?!{alternatives})[\s\S])+");
+    }
 
     public static Tokenizer<T> DefaultingTokenizer<T>(Action<TokenizerBuilder<T>> configure, T Key)
     {
