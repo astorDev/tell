@@ -16,4 +16,6 @@
     <Project Path="inspirations/makefile/play/Tell.Inspirations.Makefile.Playground.csproj" />
     <Project Path="ast/parser/play/Tell.Parser.Playground.csproj" />
     <Project Path="ast/parser/lib/Tell.Ast.Parser.csproj" />
+    <Project Path="var/use/parser/lib/Tell.Var.Use.Parser.csproj" />
+    <Project Path="var/use/parser/play/Tell.Var.Use.Parser.Playground.csproj" />
 </Solution>
