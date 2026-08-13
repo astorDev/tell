@@ -13,7 +13,7 @@ public class SmokeTests
     {
         var example = "$(name)";
 
-        var identifier = VarUse.Parser.Parse(example);
+        var identifier = VarUse.Parser.Parse(example).Identifier.Value;
 
         Assert.AreEqual("name", identifier);
     }
@@ -23,7 +23,8 @@ public class SmokeTests
     {
         var example = "Hello, $(NAME)!";
 
-        var tokenizer = new TokenizerBuilder<string>().MatchVarUse()
+        var tokenizer = new TokenizerBuilder<string>()
+            .MatchVarUse()
             .Match(Span.Except(VarOpen.Symbol), "Text")
             .Build();
 
@@ -36,11 +37,33 @@ public class SmokeTests
     }
 
     [TestMethod]
+    public void ParseAfterTokenization()
+    {
+        var example = "Hello, $(NAME)!";
+
+        var tokenizer = new TokenizerBuilder<string>()
+            .MatchVarUse()
+            .Match(Span.Except(VarOpen.Symbol), "Text")
+            .Build();
+
+        var tokens = tokenizer.Tokenize(example);
+
+        var varUseToken = tokens.Single(t => t.Kind == VarUse.TokenKey);
+        var varUse = VarUse.Parser.Parse(varUseToken.ToStringValue());
+
+        Console.WriteLine(varUse);
+
+        Assert.AreEqual("NAME", varUse.Identifier.Value);
+    }
+
+    [TestMethod]
     public void TokenizerWithoutText()
     {
         var example = "Hello, $(NAME)!";
 
-        var tokenizer = new TokenizerBuilder<string>().MatchVarUse().Build();
+        var tokenizer = new TokenizerBuilder<string>()
+            .MatchVarUse()
+            .Build();
 
         var result = tokenizer.TryTokenize(example);
 
