@@ -3,6 +3,8 @@
     <Project Path="recipe/parser/play/Tell.Recipe.Parser.Playground.csproj" />
     <Project Path="recipe/runner/lib/Tell.Recipe.Runner.csproj" />
     <Project Path="recipe/runner/play/Tell.Recipe.Runner.Playground.csproj" />
+    <Project Path="rule/parser/lib/Tell.Rule.Parser.csproj" />
+    <Project Path="rule/parser/play/Tell.Rule.Parser.Playground.csproj" />
     <Project Path="superpower/lib/Tell.Superpower.csproj" />
     <Project Path="superpower/play/Tell.Superpower.Playground.csproj" />
     <Project Path="ast/lexer/lib/Tell.Ast.Lexer.csproj" />

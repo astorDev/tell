@@ -19,7 +19,7 @@ public record RecipeFragment(
         VarUse.Parser.Select(vu => FromVarUse(vu));
 
     public static readonly TextParser<RecipeFragment> LiteralAsFragmentParser = 
-        Anything.Before(VarOpen.Trigger).Select(lit => FromLiteral(lit.ToStringValue()));
+        Anything.ExceptNewLineBefore(VarOpen.Trigger).Select(lit => FromLiteral(lit.ToStringValue()));
 
     public static readonly TextParser<RecipeFragment> VarEscapeAsFragmentParser = 
         VarOpenEscaped.SpanParser.Select(ve => FromVarEscape(new VarOpenEscaped()));

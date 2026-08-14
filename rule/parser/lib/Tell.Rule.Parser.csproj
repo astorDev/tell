@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\recipe\parser\lib\Tell.Recipe.Parser.csproj" />
+    <ProjectReference Include="..\..\..\target\parser\lib\Tell.Target.Parser.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Tell</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Superpower" />
+    <Using Include="Superpower.Parsers" />
+    <Using Include="Superpower.Model" />
+    <Using Include="Superpower.Tokenizers" />
+  </ItemGroup>
+
+</Project>

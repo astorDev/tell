@@ -3,18 +3,18 @@
 namespace Tell;
 
 public record Recipe(
-    RecipeFragment[] Fragments
+    RecipeFragment[] Fragments,
+    TextSpan LineEnd
 )
 {
     public static readonly TextParser<Recipe> Parser =
         from t in Tab.Parser
         from f in RecipeFragment.Parser.Many()
-        select new Recipe(f.ToArray());
+        from le in NewLine.SpanParser.OptionalOrDefault()
+        select new Recipe(f, le);
 
-    public static readonly TokenListParser<string, Recipe> TokensParser =
-        from t in Tab.TokenMatch
-        from f in RecipeFragment.TokenMatch.Many()
-        select new Recipe(f);
+    public const string TokenKind = "Recipe";
+    public static readonly TextParser<TextSpan> SpanParser = Span.MatchedBy(Parser);
 
     public string ToCommandString(IReadOnlyDictionary<string, string> variables)
     {
@@ -25,4 +25,10 @@ public record Recipe(
         }
         return sb.ToString();
     }
+}
+
+public static class RecipeExtensions
+{
+    public static TokenizerBuilder<T> MatchRecipe<T>(this TokenizerBuilder<T> builder, T kind) => builder.Match(Recipe.SpanParser, kind);
+    public static TokenizerBuilder<string> MatchRecipe(this TokenizerBuilder<string> builder) => builder.MatchRecipe(Recipe.TokenKind);
 }
