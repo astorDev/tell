@@ -5,10 +5,11 @@ using Superpower.Tokenizers;
 
 namespace Tell;
 
-public class VarOpenEscaped
+public record VarOpenEscaped
 {
     public const string Symbol = "$$(";
     public const string TokenKey = "VarOpenEscaped";
+    public const string EscapedSymbol = "$(";
 
     public static readonly TextParser<TextSpan> SpanParser = Span.EqualTo(Symbol);
 }

@@ -16,6 +16,12 @@ public record VarUse(Identifier Identifier)
         select new VarUse(content);
 
     public static readonly TextParser<TextSpan> SpanParser = Span.MatchedBy(Parser);
+
+    public string ToCommandFragment(IReadOnlyDictionary<string, string> variables)
+    {
+        variables.TryGetValue(Identifier.Value, out var value);
+        return value ?? string.Empty;
+    }
 }
 
 public static class VarUseExtensions

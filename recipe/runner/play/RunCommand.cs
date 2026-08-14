@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Logging;
-using Tell;
+using Superpower;
+
+namespace Tell;
 
 public class RunCommand : Command
 {
@@ -16,9 +18,8 @@ public class RunCommand : Command
 
     private async Task Execute(ParseResult parseResult)
     {
-        var recipe = Recipe.Parse(
+        var recipe = Recipe.Parser.Parse(
 """
-
     echo "Hello, $(NAME)!"
 """);
 

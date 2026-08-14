@@ -2,12 +2,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\lexer\lib\Tell.Recipe.Lexer.csproj" />
+    <ProjectReference Include="..\..\..\var\use\parser\lib\Tell.Var.Use.Parser.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RootNamespace>Tell</RootNamespace>
   </PropertyGroup>
 
 </Project>

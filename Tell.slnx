@@ -1,16 +1,10 @@
 <Solution>
-    <Project Path="recipe/lexer/play/Tell.Recipe.Lexer.Playground.csproj" />
-    <Project Path="recipe/lexer/lib/Tell.Recipe.Lexer.csproj" />
     <Project Path="recipe/parser/lib/Tell.Recipe.Parser.csproj" />
     <Project Path="recipe/parser/play/Tell.Recipe.Parser.Playground.csproj" />
+    <Project Path="recipe/runner/lib/Tell.Recipe.Runner.csproj" />
     <Project Path="recipe/runner/play/Tell.Recipe.Runner.Playground.csproj" />
-    <Folder Name="/superpower/" />
-    <Folder Name="/superpower/lib/">
-        <Project Path="superpower/lib/Tell.Superpower.csproj" />
-    </Folder>
-    <Folder Name="/superpower/play/">
-        <Project Path="superpower/play/Tell.Superpower.Playground.csproj" />
-    </Folder>
+    <Project Path="superpower/lib/Tell.Superpower.csproj" />
+    <Project Path="superpower/play/Tell.Superpower.Playground.csproj" />
     <Project Path="ast/lexer/lib/Tell.Ast.Lexer.csproj" />
     <Project Path="ast/lexer/play/Tell.Ast.Lexer.Playground.csproj" />
     <Project Path="inspirations/makefile/play/Tell.Inspirations.Makefile.Playground.csproj" />
