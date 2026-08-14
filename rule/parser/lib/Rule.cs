@@ -7,14 +7,12 @@ public record Rule(
 {
     public static readonly Tokenizer<string> Tokenizer = 
         new TokenizerBuilder<string>()
-            .IgnoreNewLines()
             .MatchTarget()
             .MatchRecipe()
             .Build();
 
     public static readonly TextParser<Rule> Parser =
         from target in Target.Parser
-        from _ in NewLine.SpanParser
         from recipes in Recipe.Parser.Many()
         select new Rule(target, recipes);
 
