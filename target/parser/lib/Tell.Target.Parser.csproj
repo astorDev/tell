@@ -1,19 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\superpower\lib\Tell.Superpower.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RootNamespace>Tell</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Superpower" Version="3.2.1" />
-  </ItemGroup>
 
   <ItemGroup>
     <Using Include="Superpower" />
     <Using Include="Superpower.Parsers" />
     <Using Include="Superpower.Model" />
+    <Using Include="Superpower.Tokenizers" />
   </ItemGroup>
 
 </Project>
