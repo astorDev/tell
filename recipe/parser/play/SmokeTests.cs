@@ -1,3 +1,4 @@
+using Superpower;
 
 namespace Tell.Playground;
 
@@ -9,12 +10,10 @@ public class SmokeTests
     {
         var recipe = 
 """
-
     dotnet run --environment $(ENV)
 """;
 
-
-        var parsed = Recipe.Parse(recipe);
-        foreach (var element in parsed.Elements) Console.WriteLine(element);
+        var parsed = Recipe.Parser.Parse(recipe);
+        foreach (var element in parsed.Fragments) Console.WriteLine(element);
     }
 }

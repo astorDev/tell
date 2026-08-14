@@ -1,4 +1,3 @@
-TEST ?= main
 ARGS ?= tell.recipe.parser . --name John
 
 run:
@@ -15,4 +14,4 @@ run-v:
 	make run
 
 test:
-	dotnet test --filter FullyQualifiedName~Tell.Playground.$(NAME) --logger "console;verbosity=detailed"
+	dotnet test --filter FullyQualifiedName~Tell.Playground.$(T) --logger "console;verbosity=detailed"

@@ -9,7 +9,7 @@ public class RecipeRunner(ILogger<RecipeRunner> logger)
     {
         logger.LogTrace("Building command from recipe: {Recipe}", recipe);
 
-        var interpolated = recipe.InterpolateWith(variables);
+        var interpolated = recipe.ToCommandString(variables);
 
         logger.LogDebug("Running in `{WorkingDirectory}` command: {Recipe}", workingDirectory, interpolated);
 
@@ -19,7 +19,7 @@ public class RecipeRunner(ILogger<RecipeRunner> logger)
 
     public static Command BuildCommand(Recipe recipe, string workingDirectory, Dictionary<string, string> variables, bool pipeToConsole = true)
     {
-        var interpolated = recipe.InterpolateWith(variables);
+        var interpolated = recipe.ToCommandString(variables);
         return StandardCommand.From(interpolated, workingDirectory, pipeToConsole);
     }
 }

@@ -1,3 +1,5 @@
+using Superpower;
+
 namespace Tell.Playground;
 
 [TestClass]
@@ -8,12 +10,11 @@ public class SmokeTests
     {
         var recipeString = 
 """
-
     dotnet run --environment $(ENV)
 """;
 
-        var recipe = Recipe.Parse(recipeString);
-        var interpolated = recipe.InterpolateWith(new Dictionary<string, string> { ["ENV"] = "Development" });
+        var recipe = Recipe.Parser.Parse(recipeString);
+        var interpolated = recipe.ToCommandString(new Dictionary<string, string> { ["ENV"] = "Development" });
 
         Console.WriteLine(interpolated);
     }
