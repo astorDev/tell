@@ -17,6 +17,13 @@ public class Anything
         return Span.Regex($@"^(?:(?!{alternatives})[\s\S])+");
     }
 
+    public static TextParser<TextSpan> ExceptNewLineBefore(params string[] delimiters)
+    {
+        var alternatives = string.Join("|", delimiters.Select(Regex.Escape));
+
+        return Span.Regex($@"^(?:(?!{alternatives})[^\r\n])+");
+    }
+
     public static Tokenizer<T> DefaultingTokenizer<T>(Action<TokenizerBuilder<T>> configure, T Key)
     {
         var builder = new TokenizerBuilder<T>();

@@ -7,7 +7,8 @@ namespace Tell;
 
 public class NewLine
 {
-    public static readonly TextParser<TextSpan> TextSpan = Span.EqualTo("\r\n").Or(Span.EqualTo("\n"));
+    public static readonly TextParser<TextSpan> SpanParser = 
+        Span.EqualTo("\r\n").Or(Span.EqualTo("\n"));
 
     public static TokenizerBuilder<T> SplitTokenizerBuilder<T>() => new TokenizerBuilder<T>().IgnoreNewLines();
     public static Tokenizer<T> SplitTokenizer<T>(Action<TokenizerBuilder<T>> configure) 
@@ -20,5 +21,5 @@ public class NewLine
 
 public static class NewLineExtensions
 {
-    public static TokenizerBuilder<T> IgnoreNewLines<T>(this TokenizerBuilder<T> builder) => builder.Ignore(NewLine.TextSpan);
+    public static TokenizerBuilder<T> IgnoreNewLines<T>(this TokenizerBuilder<T> builder) => builder.Ignore(NewLine.SpanParser);
 }

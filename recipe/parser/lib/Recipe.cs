@@ -16,6 +16,9 @@ public record Recipe(
         from f in RecipeFragment.TokenMatch.Many()
         select new Recipe(f);
 
+    public const string TokenKind = "Recipe";
+    public static readonly TextParser<TextSpan> SpanParser = Span.MatchedBy(Parser);
+
     public string ToCommandString(IReadOnlyDictionary<string, string> variables)
     {
         var sb = new StringBuilder();
@@ -25,4 +28,10 @@ public record Recipe(
         }
         return sb.ToString();
     }
+}
+
+public static class RecipeExtensions
+{
+    public static TokenizerBuilder<T> MatchRecipe<T>(this TokenizerBuilder<T> builder, T kind) => builder.Match(Recipe.SpanParser, kind);
+    public static TokenizerBuilder<string> MatchRecipe(this TokenizerBuilder<string> builder) => builder.MatchRecipe(Recipe.TokenKind);
 }
