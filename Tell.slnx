@@ -9,6 +9,8 @@
     <Project Path="superpower/play/Tell.Superpower.Playground.csproj" />
     <Project Path="ast/lexer/lib/Tell.Ast.Lexer.csproj" />
     <Project Path="ast/lexer/play/Tell.Ast.Lexer.Playground.csproj" />
+    <Project Path="doc/parser/lib/Tell.Doc.Parser.csproj" />
+    <Project Path="doc/parser/play/Tell.Doc.Parser.Playground.csproj" />
     <Project Path="inspirations/makefile/play/Tell.Inspirations.Makefile.Playground.csproj" />
     <Project Path="ast/parser/play/Tell.Parser.Playground.csproj" />
     <Project Path="ast/parser/lib/Tell.Ast.Parser.csproj" />
