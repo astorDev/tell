@@ -5,6 +5,8 @@
     <Project Path="recipe/runner/play/Tell.Recipe.Runner.Playground.csproj" />
     <Project Path="rule/parser/lib/Tell.Rule.Parser.csproj" />
     <Project Path="rule/parser/play/Tell.Rule.Parser.Playground.csproj" />
+    <Project Path="rule/runner/lib/Tell.Rule.Runner.csproj" />
+    <Project Path="rule/runner/play/Tell.Rule.Runner.Playground.csproj" />
     <Project Path="superpower/lib/Tell.Superpower.csproj" />
     <Project Path="superpower/play/Tell.Superpower.Playground.csproj" />
     <Project Path="ast/lexer/lib/Tell.Ast.Lexer.csproj" />
@@ -18,4 +20,6 @@
     <Project Path="target/parser/play/Tell.Target.Parser.Playground.csproj" />
     <Project Path="var/use/parser/lib/Tell.Var.Use.Parser.csproj" />
     <Project Path="var/use/parser/play/Tell.Var.Use.Parser.Playground.csproj" />
+    <Project Path="var/use/runner/lib/Tell.Var.Use.Runner.csproj" />
+    <Project Path="var/use/runner/play/Tell.Var.Use.Runner.Playground.csproj" />
 </Solution>

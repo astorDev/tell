@@ -22,6 +22,11 @@ public record VarUse(Identifier Identifier)
         variables.TryGetValue(Identifier.Value, out var value);
         return value ?? string.Empty;
     }
+
+    override public string ToString()
+    {
+        return $"$({Identifier.Value})";
+    }
 }
 
 public static class VarUseExtensions

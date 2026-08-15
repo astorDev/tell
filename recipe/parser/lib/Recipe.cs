@@ -25,6 +25,22 @@ public record Recipe(
         }
         return sb.ToString();
     }
+
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+        foreach (var fragment in Fragments)
+        {
+            sb.Append(fragment.ToString());
+        }
+
+        if (LineEnd.Length > 0)
+        {
+            sb.Append("[LineEnd]");
+        }
+
+        return sb.ToString();
+    }
 }
 
 public static class RecipeExtensions
