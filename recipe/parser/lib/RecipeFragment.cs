@@ -42,6 +42,14 @@ public record RecipeFragment(
         if (VarEscape is not null) return VarOpenEscaped.EscapedSymbol;
         throw new InvalidOperationException("Invalid RecipeFragment: all properties are null.");
     }
+
+    override public string ToString()
+    {
+        if (Literal is not null) return Literal;
+        if (VarUse is not null) return VarUse.ToString();
+        if (VarEscape is not null) return VarEscape.ToString();
+        throw new InvalidOperationException("Invalid RecipeFragment: all properties are null.");
+    }
 }
 
 public static class RecipeFragmentExtensions

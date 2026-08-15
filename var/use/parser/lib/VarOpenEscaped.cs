@@ -12,6 +12,11 @@ public record VarOpenEscaped
     public const string EscapedSymbol = "$(";
 
     public static readonly TextParser<TextSpan> SpanParser = Span.EqualTo(Symbol);
+
+    override public string ToString()
+    {
+        return Symbol;
+    }
 }
 
 public static class VarOpenEscapedExtensions
