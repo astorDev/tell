@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Tell;
 
 var builder = new CliBuilder();
@@ -23,5 +22,4 @@ var ruleCommand = RunRuleCommand.From(
     startupResult.WorkingDirectory
 );
 
-var ruleCommandParseResult = ruleCommand.Parse(startupResult.RemainingArgs);
-await ruleCommand.Execute(ruleCommandParseResult);
+await ruleCommand.Run(startupResult.Args);

@@ -41,6 +41,12 @@ public class RunRuleCommand : Command
         );
     }
 
+    public async Task Run(IReadOnlyList<string> args)
+    {
+        var ruleCommandParseResult = Parse(args);
+        await Execute(ruleCommandParseResult);
+    }
+
     public async Task Execute(ParseResult parseResult)
     {
         var argValues = parameters.GetVarValues(parseResult);

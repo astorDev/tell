@@ -20,7 +20,7 @@ play:
 
         var doc = Tell.Doc.Parser.Parse(example);
 
-        Console.WriteLine($"Doc: {doc.Fragments.Length} fragments");
+        Console.WriteLine($"Doc: {doc.Fragments.Count} fragments");
         
         foreach (var fragment in doc.Fragments)
         {

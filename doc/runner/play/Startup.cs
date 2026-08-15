@@ -12,11 +12,18 @@ public class Startup : Command
         Required = false
     };
 
+    private readonly Argument<string> target = new("target")
+    {
+        Description = "The target to run",
+        Arity = ArgumentArity.ZeroOrOne
+    };
+
     private readonly ILogger<Startup> logger;
 
     public Startup(ILogger<Startup> logger) : base("startup", "Interpret the Makefile and provide startup results.")
     {
         Add(fileOption);
+        Add(target);
 
         this.logger = logger;
     }
@@ -26,6 +33,7 @@ public class Startup : Command
         var file = parseResult.GetValue(fileOption) ?? "Makefile";
         var workingDirectory = Directory.GetCurrentDirectory();
         var makefilePath = Path.Combine(workingDirectory, file);
+        var targetName = parseResult.GetValue(target) ?? "default";
 
         logger.LogTrace("Searching Makefile with Path {makefilePath}", makefilePath);
 
@@ -36,7 +44,9 @@ public class Startup : Command
 
         var makefileContent = File.ReadAllText(makefilePath);
 
-        var rule = Rule.Parser.Parse(makefileContent);
+        var doc = Doc.Parser.Parse(makefileContent);
+        var rule = targetName != null ? doc.GetRule(targetName) : doc.FirstRule;
+
         return new RuleRunParams(rule, workingDirectory, parseResult.UnmatchedTokens);
     }
 }
