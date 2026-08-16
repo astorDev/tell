@@ -10,6 +10,8 @@ public record Target(Identifier Identifier)
 
     public const string TokenKind = "Target";
     public static readonly TextParser<TextSpan> SpanParser = Span.MatchedBy(Parser);
+
+    override public string ToString() => $"{Identifier}:";
 }
 
 public static class TargetExtensions

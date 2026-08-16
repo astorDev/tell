@@ -21,4 +21,5 @@ public record Identifier(string Value)
         select new Identifier(first + new string(rest));
 
     public static readonly TextParser<TextSpan> SpanParser = Span.MatchedBy(TextParser);
+    override public string ToString() => Value;
 }

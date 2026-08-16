@@ -1,4 +1,6 @@
 <Solution>
+    <Project Path="positional/lib/Tell.Positional.csproj" />
+    <Project Path="positional/play/Tell.Positional.Playground.csproj" />
     <Project Path="recipe/parser/lib/Tell.Recipe.Parser.csproj" />
     <Project Path="recipe/parser/play/Tell.Recipe.Parser.Playground.csproj" />
     <Project Path="recipe/runner/lib/Tell.Recipe.Runner.csproj" />
