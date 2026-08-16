@@ -41,6 +41,8 @@ public record Recipe(
 
         return sb.ToString();
     }
+
+    public IEnumerable<VarUse> VarUses => Fragments.Select(f => f.VarUse).Where(vu => vu is not null)!;
 }
 
 public static class RecipeExtensions

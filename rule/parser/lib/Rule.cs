@@ -18,6 +18,9 @@ public record Rule(
 
     public const string TokenKind = "Rule";
     public static readonly TextParser<TextSpan> SpanParser = Span.MatchedBy(Parser);
+
+    public string Name => Target.Identifier.Value;
+    public IEnumerable<VarUse> VarUses => Recipes.SelectMany(r => r.VarUses);
 }
 
 public static class TargetExtensions
