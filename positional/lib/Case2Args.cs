@@ -34,6 +34,8 @@ public static class Case2Args
             return new RuleRunParams(rule, workingDirectory.Path, [ secondArgument, ..unmatchedTokens ]);
         }
 
-        throw new ArgumentException($"Rule '{firstArgument}' not found in `{found.Path}`. (First positional argument: `{firstArgument}` was used as a target since 2 were provided.)");
+        throw new ArgumentException($@"First positional argument `{firstArgument}` neither works as a working directory nor as a target:
+- Working directory `{workingDirectory.SearchPath}` doesn't exists.
+- Target `{firstArgument}` is not found in `{found.Path}`.");
     }
 }

@@ -1,4 +1,4 @@
-ARGS ?= tell . --name John
+ARGS ?= run
 
 run:
 	dotnet run -- $(ARGS)

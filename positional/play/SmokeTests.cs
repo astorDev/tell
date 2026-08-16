@@ -1,15 +1,30 @@
+using Microsoft.Extensions.Logging;
+using Tell;
+
 namespace Playground;
 
 [TestClass]
 public class SmokeTests
 {
     [TestMethod]
-    public void Basic()
+    public void WorkDirAndFirstArg()
     {
-        var hello = "Hello, Tests!";
+        var argsString = "../../../../../superpower/play lol --args=xx";
+        var args = argsString.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-        Console.WriteLine(hello);
+        var tell = new TellCommand();
+        var ruleParams = tell.GetRunRuleParams(args);
+        Console.WriteLine(ruleParams);
+    }
 
-        hello.ShouldBe("Hello, Tests!");
+    [TestMethod]
+    public void WorkDirAndTarget()
+    {
+        var argsString = "../../../ test --args=xx";
+        var args = argsString.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        var tell = new TellCommand();
+        var ruleParams = tell.GetRunRuleParams(args);
+        Console.WriteLine(ruleParams);
     }
 }

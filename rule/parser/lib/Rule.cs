@@ -21,6 +21,8 @@ public record Rule(
 
     public string Name => Target.Identifier.Value;
     public IEnumerable<VarUse> VarUses => Recipes.SelectMany(r => r.VarUses);
+
+    override public string ToString() => $"{Target}\n{string.Join("\n", Recipes.Select(r => $"  {r}"))}";
 }
 
 public static class TargetExtensions

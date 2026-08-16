@@ -6,7 +6,7 @@ public static class Case3Args
     {
         if (!WorkingDirectory.TryUse(firstArgument, out var workingDirectory))
         {
-            throw new ArgumentException($"Directory `{workingDirectory.Path}` doesn't exists. (First positional argument: '{firstArgument}' was used as a working directory, since 3 were passed.)");
+            throw new ArgumentException($"Directory `{workingDirectory.SearchPath}` doesn't exists. (First positional argument: '{firstArgument}' was used as a working directory, since 3 were passed.)");
         }
 
         var extracted = workingDirectory.GetMakefile(file);

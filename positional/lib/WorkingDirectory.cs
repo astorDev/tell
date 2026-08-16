@@ -2,16 +2,21 @@ using Superpower;
 
 namespace Tell;
 
-public record WorkingDirectory(string Path)
+public record WorkingDirectory(string Path, string SearchPath)
 {
-    public static WorkingDirectory Default => new (Directory.GetCurrentDirectory());
+    public static string DefaultPath => Directory.GetCurrentDirectory();
+    public static WorkingDirectory Default => new (DefaultPath, DefaultPath);
 
     public static bool TryUse(string workdirArgument, out WorkingDirectory workingDirectory)
     {
-        var currentDirectory = Directory.GetCurrentDirectory();
-        var path = System.IO.Path.Combine(currentDirectory, workdirArgument);
-        workingDirectory = new WorkingDirectory(path);
-        return Directory.Exists(path);
+        var searchPath = System.IO.Path.Combine(DefaultPath, workdirArgument);
+        var exists = Directory.Exists(searchPath);
+        workingDirectory = new WorkingDirectory(
+            exists ? searchPath : DefaultPath,
+            searchPath
+        );
+
+        return exists;
     }
 
     public MakefileSearchResult GetMakefile(string? file)
