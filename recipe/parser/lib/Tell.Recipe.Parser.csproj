@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\lexer\lib\Tell.Recipe.Lexer.csproj" />
     <ProjectReference Include="..\..\..\var\use\parser\lib\Tell.Var.Use.Parser.csproj" />
   </ItemGroup>
 
