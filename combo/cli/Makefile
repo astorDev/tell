@@ -8,7 +8,7 @@ install:
 	dotnet tool install --global --source ./bin/Release Tell.Cli --allow-downgrade
 
 install-from-nuget:
-	dotnet tool install --global Tell.Cli
+	dotnet tool install --global Tell.Cli --prerelease
 
 uninstall:
 	dotnet tool uninstall --global Tell.Cli
