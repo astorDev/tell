@@ -2,7 +2,8 @@ name: Tell.Cli (Combo) NuGet
 on:
   push:
     paths:
-      - 'combo/cli/**'
+      # - 'combo/cli/**'
+      - '**' # for now combo has transient dependencies on all other projects
       - '.github/workflows/combo-cli-nuget.yml'
   workflow_dispatch:
 
