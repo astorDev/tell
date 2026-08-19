@@ -1,9 +1,5 @@
-GREETING ?= Hello
-TARGET ?= greeting
-ARGS ?= --file example.Makefile $(TARGET) $(GREETING) --name Egor
-
 run:
-	dotnet run -- $(ARGS)
+	dotnet run -- --file example.Makefile $(ARGS)
 
 apply-v:
 	cp Versions/$(V)/Program.cs Program.cs

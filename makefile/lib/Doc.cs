@@ -1,10 +1,13 @@
-﻿using Superpower;
+﻿global using Superpower;
+global using Superpower.Model;
+global using Superpower.Parsers;
 
 namespace Tell;
 
 public record Doc(
     IReadOnlyList<DocFragment> Fragments,
-    IReadOnlyDictionary<string, Rule> Rules
+    IReadOnlyDictionary<string, Rule> Rules,
+    IReadOnlyList<Assignment> Assignments
 )
 {
     public static readonly TextParser<Doc> Parser =
@@ -17,7 +20,12 @@ public record Doc(
             .Select(f => f.Rule!)
             .ToDictionary(r => r.Target.Identifier.Value, r => r);
 
-        return new Doc(fragments, rules);
+        var assignments = fragments
+            .Where(f => f.Assignment is not null)
+            .Select(f => f.Assignment!)
+            .ToList();
+
+        return new Doc(fragments, rules, assignments);
     }
 
     public Rule GetRule(string name)

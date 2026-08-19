@@ -33,7 +33,7 @@ public class Startup : Command
         var file = parseResult.GetValue(fileOption) ?? "Makefile";
         var workingDirectory = Directory.GetCurrentDirectory();
         var makefilePath = Path.Combine(workingDirectory, file);
-        var targetName = parseResult.GetValue(target) ?? "default";
+        var targetName = parseResult.GetValue(target);
 
         logger.LogTrace("Searching Makefile with Path {makefilePath}", makefilePath);
 
@@ -43,10 +43,13 @@ public class Startup : Command
         }
 
         var makefileContent = File.ReadAllText(makefilePath);
-
         var doc = Doc.Parser.Parse(makefileContent);
-        var rule = targetName != null ? doc.GetRule(targetName) : doc.FirstRule;
 
-        return new RuleRunParams(rule, workingDirectory, parseResult.UnmatchedTokens);
+        return RuleRunParams.From(
+            doc, 
+            targetName, 
+            workingDirectory, 
+            parseResult.UnmatchedTokens
+        );
     }
 }

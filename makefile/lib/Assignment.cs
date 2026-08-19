@@ -1,8 +1,4 @@
-﻿global using Superpower;
-global using Superpower.Model;
-global using Superpower.Parsers;
-
-namespace Tell;
+﻿namespace Tell;
 
 public record Assignment(
     Identifier Target,
