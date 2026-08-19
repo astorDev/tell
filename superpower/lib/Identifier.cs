@@ -15,11 +15,11 @@ public record Identifier(string Value)
             .Or(Character.EqualTo('_'))
             .Or(Character.EqualTo('-'));
 
-    public static readonly TextParser<Identifier> TextParser =
+    public static readonly TextParser<Identifier> Parser =
         from first in FirstCharParser
         from rest in RestCharParser.Many()
         select new Identifier(first + new string(rest));
 
-    public static readonly TextParser<TextSpan> SpanParser = Span.MatchedBy(TextParser);
+    public static readonly TextParser<TextSpan> SpanParser = Span.MatchedBy(Parser);
     override public string ToString() => Value;
 }
