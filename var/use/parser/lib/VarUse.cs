@@ -11,7 +11,7 @@ public record VarUse(Identifier Identifier)
 
     public static readonly TextParser<VarUse> Parser = 
         from open in VarOpen.SpanParser
-        from content in Identifier.TextParser
+        from content in Identifier.Parser
         from close in VarClose.SpanParser
         select new VarUse(content);
 

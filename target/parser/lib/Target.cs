@@ -3,7 +3,7 @@
 public record Target(Identifier Identifier)
 {
     public static readonly TextParser<Target> Parser =
-        from identifier in Identifier.TextParser
+        from identifier in Identifier.Parser
         from colon in Colon.Parser
         from _ in NewLine.SpanParser.OptionalOrDefault()
         select new Target(identifier);

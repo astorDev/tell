@@ -8,7 +8,8 @@ namespace Tell;
 
 public class Anything
 {
-    public static readonly TextParser<TextSpan> ExceptNewLine = Span.Regex(".*");
+    public static readonly TextParser<TextSpan> SpanExceptNewLine = Span.Regex(".*");
+    public static readonly TextParser<string> ExceptNewLine = SpanExceptNewLine.Select(s => s.ToStringValue());
 
     public static TextParser<TextSpan> Before(params string[] delimiters)
     {
@@ -28,7 +29,7 @@ public class Anything
     {
         var builder = new TokenizerBuilder<T>();
         configure(builder);
-        return builder.Match(ExceptNewLine, Key).Build();
+        return builder.Match(SpanExceptNewLine, Key).Build();
     }
 
     public static Tokenizer<string> Tokenizer(Action<TokenizerBuilder<string>>? configure) => DefaultingTokenizer(configure ?? (_ => { }), nameof(Anything));
@@ -36,6 +37,6 @@ public class Anything
 
 public static class AnythingExtensions
 {
-    public static TokenizerBuilder<T> MatchAnything<T>(this TokenizerBuilder<T> builder, T Key) => builder.Match(Anything.ExceptNewLine, Key);
-    public static TokenizerBuilder<string> MatchAnything(this TokenizerBuilder<string> builder) => builder.Match(Anything.ExceptNewLine, nameof(Anything));
+    public static TokenizerBuilder<T> MatchAnything<T>(this TokenizerBuilder<T> builder, T Key) => builder.Match(Anything.SpanExceptNewLine, Key);
+    public static TokenizerBuilder<string> MatchAnything(this TokenizerBuilder<string> builder) => builder.Match(Anything.SpanExceptNewLine, nameof(Anything));
 }

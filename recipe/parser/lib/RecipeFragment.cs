@@ -2,6 +2,7 @@ global using Superpower;
 global using Superpower.Model;
 global using Superpower.Parsers;
 global using Superpower.Tokenizers;
+using System.Text;
 
 namespace Tell;
 
@@ -56,4 +57,14 @@ public static class RecipeFragmentExtensions
 {
     public static TokenizerBuilder<T> MatchRecipeFragment<T>(this TokenizerBuilder<T> builder, T kind) => builder.Match(RecipeFragment.SpanParser, kind);
     public static TokenizerBuilder<string> MatchRecipeFragment(this TokenizerBuilder<string> builder) => builder.Match(RecipeFragment.SpanParser, RecipeFragment.TokenKind);
+
+    public static string ToCommandString(this IEnumerable<RecipeFragment> fragments, IReadOnlyDictionary<string, string> variables)
+    {
+        var sb = new StringBuilder();
+        foreach (var fragment in fragments)
+        {
+            sb.Append(fragment.ToCommandFragment(variables));
+        }
+        return sb.ToString();
+    }
 }

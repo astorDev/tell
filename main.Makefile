@@ -1,6 +1,7 @@
 MODULE ?= Var
 SUB ?= Use
 NEXT ?= Parser
+THIS ?= make -f main.Makefile
 
 lib-0:
 	dotnet new classlib --name Tell.$(MODULE) --output `cameled $(MODULE)/lib`
@@ -11,8 +12,8 @@ cli-play-0:
 	dotnet sln add `cameled $(MODULE)/play` --in-root
 
 lib-n-play-0:
-	make lib-0
-	make cli-play-0
+	$(THIS) lib-0
+	$(THIS) cli-play-0
 	dotnet add `cameled $(MODULE)/play` reference `cameled $(MODULE)/lib`
 
 lib:

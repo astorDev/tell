@@ -16,15 +16,7 @@ public record Recipe(
     public const string TokenKind = "Recipe";
     public static readonly TextParser<TextSpan> SpanParser = Span.MatchedBy(Parser);
 
-    public string ToCommandString(IReadOnlyDictionary<string, string> variables)
-    {
-        var sb = new StringBuilder();
-        foreach (var fragment in Fragments)
-        {
-            sb.Append(fragment.ToCommandFragment(variables));
-        }
-        return sb.ToString();
-    }
+    public string ToCommandString(IReadOnlyDictionary<string, string> variables) => this.Fragments.ToCommandString(variables);
 
     public override string ToString()
     {
