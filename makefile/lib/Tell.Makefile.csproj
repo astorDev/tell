@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.11" />
-    <PackageReference Include="NiceShell.CliWrap" Version="2026.108.118.2" />
+    <PackageReference Include="NiceShell.CliWrap" Version="2026.108.120.5" />
     <PackageReference Include="Superpower" Version="3.2.1" />
   </ItemGroup>
 

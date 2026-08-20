@@ -15,10 +15,9 @@ public class RecipeRunner(ILogger<RecipeRunner> logger)
         logger.LogDebug("Running built command in `{WorkingDirectory}`:", workingDirectory);
         logger.LogInformation("{Interpolated}", interpolated);
 
-        var shell = OperatingSystem.IsWindows() ? Shell.Cmd : Shell.Bash;
-        var command = shell.Proxy(interpolated)
+        var command = Shell.Sh.Proxy(interpolated)
             .WithWorkingDirectory(workingDirectory)
-            .WithConsoleForwarding();
+            .WithDimmedConsoleForwarding();
 
         return await command.ExecuteAsync();
     }

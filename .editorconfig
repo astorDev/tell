@@ -2,3 +2,6 @@
 
 # IDE0305: Simplify collection initialization
 dotnet_diagnostic.IDE0305.severity = silent
+
+# CA1873: Avoid potentially expensive logging
+dotnet_diagnostic.CA1873.severity = silent
