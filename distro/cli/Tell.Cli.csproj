@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\positional\lib\Tell.Positional.csproj" />
     <ProjectReference Include="..\..\makefile\lib\Tell.Makefile.csproj" />
   </ItemGroup>
 

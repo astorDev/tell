@@ -1,11 +1,9 @@
 <Solution>
     <Project Path="makefile/lib/Tell.Makefile.csproj" />
     <Project Path="makefile/play/Tell.Makefile.Playground.csproj" />
-    <Project Path="positional/lib/Tell.Positional.csproj" />
-    <Project Path="positional/play/Tell.Positional.Playground.csproj" />
     <Project Path="superpower/lib/Tell.Superpower.csproj" />
     <Project Path="superpower/play/Tell.Superpower.Playground.csproj" />
-    <Project Path="combo/cli/Tell.Cli.csproj" />
+    <Project Path="distro/cli/Tell.Cli.csproj" />
     <Project Path="inspirations/makefile/play/Tell.Inspirations.Makefile.Playground.csproj" />
     <Project Path="var/use/parser/lib/Tell.Var.Use.Parser.csproj" />
     <Project Path="var/use/parser/play/Tell.Var.Use.Parser.Playground.csproj" />
