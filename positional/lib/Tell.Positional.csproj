@@ -1,8 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\doc\parser\lib\Tell.Doc.Parser.csproj" />
-    <ProjectReference Include="..\..\rule\runner\lib\Tell.Rule.Runner.csproj" />
     <ProjectReference Include="..\..\makefile\lib\Tell.Makefile.csproj" />
   </ItemGroup>
 
