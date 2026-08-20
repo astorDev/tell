@@ -4,7 +4,7 @@ using Tell;
 namespace Playground;
 
 [TestClass]
-public class SmokeTests
+public class RuleTests
 {
     [TestMethod]
     public void Tokens()

@@ -25,7 +25,7 @@ public record Rule(
     override public string ToString() => $"{Target}\n{string.Join("\n", Recipes.Select(r => $"  {r}"))}";
 }
 
-public static class TargetExtensions
+public static class RuleExtensions
 {
     public static TokenizerBuilder<T> MatchRule<T>(this TokenizerBuilder<T> builder, T kind) => builder.Match(Rule.SpanParser, kind);
     public static TokenizerBuilder<string> MatchRule(this TokenizerBuilder<string> builder) => builder.MatchRule(Rule.TokenKind);

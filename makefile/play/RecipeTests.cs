@@ -3,7 +3,7 @@ using Superpower;
 namespace Tell.Playground;
 
 [TestClass]
-public class SmokeTests
+public class RecipeTests
 {
     [TestMethod]
     public void Basic()
