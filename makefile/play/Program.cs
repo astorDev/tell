@@ -18,9 +18,9 @@ var runner = app.Services.GetRequiredService<RuleRunner>();
 var runParseResult = startup.Parse(args);
 var runParams = startup.Interpret(runParseResult);
 
-var runCommand = RunRuleCommand.From(runParams.Rule);
+var runCommand = ParseOnlyRunRuleCommand.From(runParams.Rule);
 var ruleCommandParseResult = runCommand.Parse(runParams.Args);
-var parsedVarValues = runCommand.Parameters.GetVarValues(ruleCommandParseResult);
+var parsedVarValues = runCommand.VarUseParams.GetVarValues(ruleCommandParseResult);
 var varValues = runParams.Assignments.TransformVariables(parsedVarValues);
 
 await runner.Run(runParams.Rule, runParams.WorkingDirectory, varValues);

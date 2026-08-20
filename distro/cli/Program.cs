@@ -10,24 +10,34 @@ builder.Logging.SetMinimumLevel(LogLevel.Information);
 builder.Services.AddSingleton<RuleRunner>();
 builder.Services.AddSingleton<RecipeRunner>();
 
-builder.AddCommand<TellCommand>();
+builder.AddCommand<EntryGate>();
 
 using var app = builder.Build("A tell CLI application.");
 
-var tell = app.Services.GetRequiredService<TellCommand>();
+var gate = app.Services.GetRequiredService<EntryGate>();
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 var runner = app.Services.GetRequiredService<RuleRunner>();
 
 try
 {
-    var runParams = tell.GetRunRuleParams(args);
+    var runParams = gate.GetRunRuleParams(args);
 
-    var runCommand = RunRuleCommand.From(runParams.Rule);
-    var ruleCommandParseResult = runCommand.Parse(runParams.Args);
-    var parsedVarValues = runCommand.Parameters.GetVarValues(ruleCommandParseResult);
-    var varValues = runParams.Assignments.TransformVariables(parsedVarValues);
+    var allRuleRunCommands = runParams.Doc.Rules.Select(r => new RunRuleCommand(
+        new RuleRunParams(r.Value, runParams.Doc, runParams.WorkingDirectory, runParams.Args), runner));
+    
+    //Console.WriteLine(runParams.ToString());
 
-    await runner.Run(runParams.Rule, runParams.WorkingDirectory, varValues);
+    var defaultRuleRunCommand = new RunRuleCommand(runParams, runner);
+    var tell = new TellCommand(allRuleRunCommands, defaultRuleRunCommand);
+
+    await tell.Parse(args).InvokeAsync();
+
+    // var runCommand = ParseOnlyRunRuleCommand.From(runParams.Rule);
+    // var ruleCommandParseResult = runCommand.Parse(runParams.Args);
+    // var parsedVarValues = runCommand.VarUseParams.GetVarValues(ruleCommandParseResult);
+    // var varValues = runParams.Assignments.TransformVariables(parsedVarValues);
+
+    // await runner.Run(runParams.Rule, runParams.WorkingDirectory, varValues);
 }
 catch (Exception ex)
 {

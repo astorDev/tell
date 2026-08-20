@@ -78,12 +78,16 @@ public record TellCommandParams(
             third = null;
         }
 
-        return this with
+        var all = new string?[] { first, second, third }.Where(x => x is not null).ToList();
+
+        var result = this with
         {
-            FirstArgument = first,
-            SecondArgument = second,
-            ThirdArgument = third,
+            FirstArgument = all.ElementAtOrDefault(0),
+            SecondArgument = all.ElementAtOrDefault(1),
+            ThirdArgument = all.ElementAtOrDefault(2),
             UnmatchedTokens = unmatchedTokens
         };
+
+        return result;
     }
 }

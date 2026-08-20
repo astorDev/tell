@@ -2,7 +2,7 @@ namespace Tell;
 
 public record RuleRunParams(
     Rule Rule,
-    IReadOnlyList<Assignment> Assignments,
+    Doc Doc,
     string WorkingDirectory,
     IReadOnlyList<string> Args
 )
@@ -14,7 +14,7 @@ public record RuleRunParams(
         var rule = ruleName != null ? doc.GetRule(ruleName) : doc.FirstRule;
         return new(
             rule,
-            doc.Assignments,
+            doc,
             workingDirectory, 
             args
         );

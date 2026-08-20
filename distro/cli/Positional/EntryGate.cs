@@ -1,10 +1,8 @@
-using System.CommandLine;
-
 namespace Tell;
 
-public class TellCommand : Command
+public class EntryGate : Command
 {
-    public TellCommand() : base("tell", "Greet a person by name.")
+    public EntryGate() : base("tell")
     {
         Add(TellCommandParams.firstArgument);
         Add(TellCommandParams.secondArgument);
@@ -12,7 +10,7 @@ public class TellCommand : Command
         Add(TellCommandParams.fileOption);
     }
 
-    private static RuleRunParams RunRuleParamsFrom(ParseResult parseResult)
+    public static RuleRunParams RunRuleParamsFrom(ParseResult parseResult)
     {
         var parameters = TellCommandParams.From(parseResult);
         var (first, second, third, file, unmatchedTokens) = parameters;
