@@ -15,6 +15,6 @@ public static class Case3Args
             throw new ArgumentException($"Rule '{secondArgument}' not found in `{extracted.Path}`. (Second positional argument: `{secondArgument}` was used as a target since 3 were provided.)");
         }
 
-        return new RuleRunParams(rule, workingDirectory.Path, [ thirdArgument, ..unmatchedTokens ]);
+        return new RuleRunParams(rule, extracted.Doc.Assignments, workingDirectory.Path, [ thirdArgument, ..unmatchedTokens ]);
     }
 }

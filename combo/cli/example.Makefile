@@ -1,2 +1,5 @@
+GREETING ?= Servus
+NAME ?= World
+
 greet:
-	echo Hello, $(NAME)!
+	echo $(GREETING), $(NAME)!

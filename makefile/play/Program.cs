@@ -1,19 +1,26 @@
-global using Superpower;
 global using Tell;
+global using Superpower;
+global using Microsoft.Extensions.DependencyInjection;
 
 var builder = new CliBuilder();
 
 builder.Logging.AddNiceShell();
 
-builder.AddCommand<RunCommand>();
+builder.Services.AddSingleton<Startup>();
+builder.Services.AddSingleton<RuleRunner>();
+builder.Services.AddSingleton<RecipeRunner>();
 
-using var app = builder.Build("A tell.makefile CLI application.");
+using var app = builder.Build("A tell.doc.runner CLI application.");
 
-var makefile = """
-NAME ?= Egor
-GREETING ?= Servus
-""";
+var startup = app.Services.GetRequiredService<Startup>();
+var runner = app.Services.GetRequiredService<RuleRunner>();
 
-throw new NotImplementedException("Implement the CLI application logic here.");
+var runParseResult = startup.Parse(args);
+var runParams = startup.Interpret(runParseResult);
 
-return app.Run(args);
+var runCommand = RunRuleCommand.From(runParams.Rule);
+var ruleCommandParseResult = runCommand.Parse(runParams.Args);
+var parsedVarValues = runCommand.Parameters.GetVarValues(ruleCommandParseResult);
+var varValues = runParams.Assignments.TransformVariables(parsedVarValues);
+
+await runner.Run(runParams.Rule, runParams.WorkingDirectory, varValues);

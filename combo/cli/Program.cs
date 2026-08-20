@@ -16,23 +16,21 @@ using var app = builder.Build("A tell CLI application.");
 
 var tell = app.Services.GetRequiredService<TellCommand>();
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
-var ruleRunner = app.Services.GetRequiredService<RuleRunner>();
+var runner = app.Services.GetRequiredService<RuleRunner>();
 
 try
 {
-    var ruleRunParams = tell.GetRunRuleParams(args);
+    var runParams = tell.GetRunRuleParams(args);
 
-    var ruleRunCommand = RunRuleCommand.From(
-        ruleRunParams.Rule,
-        ruleRunner,
-        ruleRunParams.WorkingDirectory
-    );
+    var runCommand = RunRuleCommand.From(runParams.Rule);
+    var ruleCommandParseResult = runCommand.Parse(runParams.Args);
+    var parsedVarValues = runCommand.Parameters.GetVarValues(ruleCommandParseResult);
+    var varValues = runParams.Assignments.TransformVariables(parsedVarValues);
 
-    await ruleRunCommand.Run(ruleRunParams.Args);
+    await runner.Run(runParams.Rule, runParams.WorkingDirectory, varValues);
 }
 catch (Exception ex)
 {
-    //logger.LogError(ex, "An error occurred while running the command.");
-    logger.LogError(ex.Message);
+    logger.LogError("{Message}", ex.Message);
     Environment.Exit(1);
 }

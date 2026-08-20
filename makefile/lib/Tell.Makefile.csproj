@@ -14,6 +14,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\superpower\lib\Tell.Superpower.csproj" />
     <ProjectReference Include="..\..\recipe\parser\lib\Tell.Recipe.Parser.csproj" />
+    <ProjectReference Include="..\..\rule\parser\lib\Tell.Rule.Parser.csproj" />
+    <ProjectReference Include="..\..\rule\runner\lib\Tell.Rule.Runner.csproj" />
   </ItemGroup>
 
 </Project>
