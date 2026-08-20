@@ -1,4 +1,4 @@
-ARGS ?= --file example.Makefile Egor
+ARGS ?= --file example.Makefile Servus
 
 run:
 	dotnet run -- $(ARGS)
