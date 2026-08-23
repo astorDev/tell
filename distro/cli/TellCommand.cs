@@ -1,14 +1,9 @@
-using Tell;
+namespace Tell;
 
-public class TellCommand : RootCommand
+public class EffectiveTellCommand : RootCommand
 {
-    public TellCommand(IEnumerable<RunRuleCommand> allCommands, RunRuleCommand defaultRuleCommand) : base("tell")
+    public EffectiveTellCommand(IEnumerable<RunRuleCommand> allCommands, RunRuleCommand defaultRuleCommand) : base("tell")
     {
-        Add(TellCommandParams.firstArgument);
-        Add(TellCommandParams.secondArgument);
-        Add(TellCommandParams.thirdArgument);
-        Add(TellCommandParams.fileOption);
-
         foreach (var command in allCommands)
         {
             Add(command);
@@ -25,5 +20,26 @@ public class TellCommand : RootCommand
         }
 
         SetAction(defaultRuleCommand.Execute);
+    }
+}
+
+public class InfoTellCommand : RootCommand
+{
+    public InfoTellCommand(IEnumerable<RunRuleCommand> allCommands, RunRuleCommand defaultRuleCommand) : base("tell")
+    {
+        Add(TellCommandParams.firstArgument);
+        Add(TellCommandParams.secondArgument);
+        Add(TellCommandParams.thirdArgument);
+        Add(TellCommandParams.fileOption);
+
+        foreach (var command in allCommands)
+        {
+            Add(command);
+        }
+
+        foreach (var option in defaultRuleCommand.VarUseParams.Options)
+        {
+            Add(option.Value);
+        }
     }
 }

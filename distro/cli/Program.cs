@@ -20,24 +20,21 @@ var runner = app.Services.GetRequiredService<RuleRunner>();
 
 try
 {
-    var runParams = gate.GetRunRuleParams(args);
+    var gateParseResult = gate.Parse(args);
+    var runParams = gate.RunRuleParamsFrom(gateParseResult);
 
     var allRuleRunCommands = runParams.Doc.Rules.Select(r => new RunRuleCommand(
         new RuleRunParams(r.Value, runParams.Doc, runParams.WorkingDirectory, runParams.Args), runner));
-    
-    //Console.WriteLine(runParams.ToString());
 
     var defaultRuleRunCommand = new RunRuleCommand(runParams, runner);
-    var tell = new TellCommand(allRuleRunCommands, defaultRuleRunCommand);
 
-    await tell.Parse(args).InvokeAsync();
+    Command tell = gateParseResult.Action is not null
+        ? new InfoTellCommand(allRuleRunCommands, defaultRuleRunCommand)
+        : new EffectiveTellCommand(allRuleRunCommands, defaultRuleRunCommand);
 
-    // var runCommand = ParseOnlyRunRuleCommand.From(runParams.Rule);
-    // var ruleCommandParseResult = runCommand.Parse(runParams.Args);
-    // var parsedVarValues = runCommand.VarUseParams.GetVarValues(ruleCommandParseResult);
-    // var varValues = runParams.Assignments.TransformVariables(parsedVarValues);
+    logger.LogDebug("Executing tell command with args: {Args}", runParams.Args);
 
-    // await runner.Run(runParams.Rule, runParams.WorkingDirectory, varValues);
+    await tell.Parse(runParams.Args).InvokeAsync();
 }
 catch (Exception ex)
 {

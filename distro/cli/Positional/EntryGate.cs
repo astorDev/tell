@@ -1,34 +1,47 @@
+using System.CommandLine.Help;
+using Microsoft.Extensions.Logging;
+
 namespace Tell;
 
-public class EntryGate : Command
+public class EntryGate : RootCommand
 {
-    public EntryGate() : base("tell")
+    private readonly ILogger<EntryGate> logger;
+
+    public EntryGate(ILogger<EntryGate> logger) : base("tell")
     {
         Add(TellCommandParams.firstArgument);
         Add(TellCommandParams.secondArgument);
         Add(TellCommandParams.thirdArgument);
         Add(TellCommandParams.fileOption);
+        this.logger = logger;
     }
 
-    public static RuleRunParams RunRuleParamsFrom(ParseResult parseResult)
+    public RuleRunParams RunRuleParamsFrom(ParseResult parseResult)
     {
         var parameters = TellCommandParams.From(parseResult);
-        var (first, second, third, file, unmatchedTokens) = parameters;
+        
+        logger.LogDebug("Parsed tell command parameters: {Parameters}, UnmatchedTokens: {UnmatchedTokens}, Tokens: {Tokens}", 
+            parameters, 
+            parameters.ResuppliedTokens,
+            parseResult.Tokens    
+        );
+
+        var (first, second, third, file, resuppliedTokens) = parameters;
 
         if (third is not null)
         {
-            return Case3Args.GetRuleRunParams(first!, second!, third, file, unmatchedTokens);
+            return Case3Args.GetRuleRunParams(first!, second!, third, file, resuppliedTokens);
         }
         if (second is not null)
         {
-            return Case2Args.GetRuleRunParams(first!, second!, file, unmatchedTokens);
+            return Case2Args.GetRuleRunParams(first!, second!, file, resuppliedTokens);
         }
         if (first is not null)
         {
-            return Case1Args.GetRuleRunParams(first!, file, unmatchedTokens);
+            return Case1Args.GetRuleRunParams(first!, file, resuppliedTokens);
         }
 
-        return Case0Args.GetRuleRunParams(file, unmatchedTokens);
+        return Case0Args.GetRuleRunParams(file, resuppliedTokens);
     }
 
     public RuleRunParams GetRunRuleParams(string[] args)

@@ -19,6 +19,7 @@ public class RunRuleCommand : ParseOnlyRunRuleCommand
     public async Task Execute(ParseResult parseResult)
     {
         var variables = this.VarUseParams.GetVarValues(parseResult);
+        variables = parameters.Doc.Assignments.TransformVariables(variables);
 
         await runner.Run(
             parameters.Rule.Recipes, 
@@ -39,20 +40,5 @@ public class ParseOnlyRunRuleCommand : Command
 
         if (parameters.Argument is not null) Add(parameters.Argument.Value);
         foreach (var option in parameters.Options) Add(option.Value);
-    }
-
-    public static IEnumerable<VarUse> UsedVariables(IEnumerable<Recipe> recipes) => recipes
-        .SelectMany(recipe => recipe.Fragments)
-        .Where(f => f.VarUse is not null)
-        .Select(f => f.VarUse!)
-        .DistinctBy(vu => vu!.Identifier.Value);
-
-    public static ParseOnlyRunRuleCommand From(Rule rule)
-    {
-        var usedVariables = UsedVariables(rule.Recipes);
-        return new(
-            rule.Target.Identifier.Value,
-            VarUseCommandParams.From(usedVariables)
-        );
     }
 }

@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.CommandLine.Help;
 
 namespace Tell;
 
@@ -7,7 +8,7 @@ public record TellCommandParams(
     string? SecondArgument,
     string? ThirdArgument,
     string? FileOption,
-    IReadOnlyList<string> UnmatchedTokens
+    IReadOnlyList<string> ResuppliedTokens
 )
 {
     public static readonly Argument<string> firstArgument = new("first")
@@ -46,9 +47,11 @@ public record TellCommandParams(
         var second = parseResult.GetValue(secondArgument);
         var third = parseResult.GetValue(thirdArgument);
         var file = parseResult.GetValue(fileOption);
-        var unmatchedTokens = parseResult.UnmatchedTokens.ToList();
+        var resuppliedTokens = parseResult.UnmatchedTokens.ToList();
+        var infoTokens = RootCommandHelper.GetInfoTokens(parseResult);
+        resuppliedTokens.AddRange(infoTokens);
 
-        return new TellCommandParams(first, second, third, file, unmatchedTokens);
+        return new TellCommandParams(first, second, third, file, resuppliedTokens);
     }
 
     /// <summary>
@@ -85,7 +88,7 @@ public record TellCommandParams(
             FirstArgument = all.ElementAtOrDefault(0),
             SecondArgument = all.ElementAtOrDefault(1),
             ThirdArgument = all.ElementAtOrDefault(2),
-            UnmatchedTokens = unmatchedTokens
+            ResuppliedTokens = unmatchedTokens
         };
 
         return result;
