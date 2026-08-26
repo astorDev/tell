@@ -15,6 +15,7 @@ public record VarUseCommandParams(
     public IReadOnlyDictionary<string, string> GetVarValues(ParseResult parseResult)
     {
         var argValues = new Dictionary<string, string>();
+        
         if (Argument is not null)
         {
             var firstArgValue = parseResult.GetValue(this.Argument.Value);

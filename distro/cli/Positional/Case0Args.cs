@@ -6,6 +6,6 @@ internal class Case0Args
     {
         var workingDirectory = WorkingDirectory.Default;
         var found = workingDirectory.GetMakefile(file);
-        return new RuleRunParams(found.Doc.FirstRule, found.Doc.Assignments, workingDirectory.Path, unmatchedTokens);
+        return new RuleRunParams(found.Doc.FirstRule, found.Doc, workingDirectory.Path, unmatchedTokens);
     }
 }
