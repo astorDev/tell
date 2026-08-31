@@ -7,3 +7,6 @@ greeting:
 
 farewell:
 	echo "Goodbye, $(NAME)!"
+
+nano:
+	nano example.Makefile
