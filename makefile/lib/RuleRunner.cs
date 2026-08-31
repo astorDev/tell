@@ -6,7 +6,8 @@ public class RuleRunner(RecipeRunner recipeRunner)
     {
         foreach (var recipe in recipes)
         {
-            await recipeRunner.Run(recipe, workingDirectory, variables);
+            using var process = await recipeRunner.Run(recipe, workingDirectory, variables);
+            if (process.ExitCode != 0) throw new Exception($"Recipe failed with exit code {process.ExitCode}: {recipe}");
         }
     }
 }
