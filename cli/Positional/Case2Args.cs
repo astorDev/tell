@@ -17,7 +17,7 @@ public static class Case2Args
             return new RuleRunParams(rule, found.Doc, workingDirectory.Path, unmatchedTokens);
         }
 
-        var anyArgumentInFirstRule = found.Doc.FirstRule.Recipes.SelectMany(r => r.Fragments.Where(f => f.VarUse is not null)).Any();
+        var anyArgumentInFirstRule = found.Doc.FirstRule.Recipes.SelectMany(r => r.Fragments.Where(f => f.Placeholder is not null)).Any();
         if (!anyArgumentInFirstRule)
         {
             throw new ArgumentException($"First rule in `{found.Path}` has no arguments, so second positional argument `{secondArgument}` can not be used for it. It couldn't be used as a target either, since no matching target exist in the Makefile.");

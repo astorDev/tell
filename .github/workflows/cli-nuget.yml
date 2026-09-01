@@ -4,7 +4,7 @@ on:
     paths:
       # - 'combo/cli/**'
       - '**' # for now combo has transient dependencies on makefile, var and superpower.
-      - '.github/workflows/distro-cli-nuget.yml'
+      - '.github/workflows/cli-nuget.yml'
   workflow_dispatch:
 
 jobs:
@@ -14,5 +14,5 @@ jobs:
     steps:
       - uses: astorDev/versy/calver/nuget@main
         with:
-          project: distro/cli/Tell.Cli
+          project: cli/Tell.Cli
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}

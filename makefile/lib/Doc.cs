@@ -1,6 +1,8 @@
 ﻿global using Superpower;
 global using Superpower.Model;
 global using Superpower.Parsers;
+global using Superpower.Tokenizers;
+global using System.CommandLine;
 
 namespace Tell;
 

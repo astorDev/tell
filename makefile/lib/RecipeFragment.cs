@@ -1,29 +1,25 @@
-global using Superpower;
-global using Superpower.Model;
-global using Superpower.Parsers;
-global using Superpower.Tokenizers;
 using System.Text;
 
 namespace Tell;
 
 public record RecipeFragment(
     string? Literal = null,
-    VarUse? VarUse = null,
-    VarOpenEscaped? VarEscape = null
+    Placeholder? Placeholder = null,
+    VarUse.Escape? VarEscape = null
 )
 {
     public static RecipeFragment FromLiteral(string literal) => new(Literal: literal);
-    public static RecipeFragment FromVarUse(VarUse varUse) => new(VarUse: varUse);
-    public static RecipeFragment FromVarEscape(VarOpenEscaped varEscape) => new(VarEscape: varEscape);
+    public static RecipeFragment FromVarUse(Placeholder placeholder) => new(Placeholder: placeholder);
+    public static RecipeFragment FromVarEscape(VarUse.Escape varEscape) => new(VarEscape: varEscape);
 
     public static readonly TextParser<RecipeFragment> VarUseAsFragmentParser = 
-        VarUse.Parser.Select(vu => FromVarUse(vu));
+        VarUse.Boundaries.PlaceholderParser.Select(vu => FromVarUse(vu));
 
     public static readonly TextParser<RecipeFragment> LiteralAsFragmentParser = 
-        Anything.ExceptNewLineBefore(VarOpen.Trigger).Select(lit => FromLiteral(lit.ToStringValue()));
+        Anything.ExceptNewLineBefore(VarUse.Opener.Trigger).Select(lit => FromLiteral(lit.ToStringValue()));
 
     public static readonly TextParser<RecipeFragment> VarEscapeAsFragmentParser = 
-        VarOpenEscaped.SpanParser.Select(ve => FromVarEscape(new VarOpenEscaped()));
+        VarUse.Escape.SpanParser.Select(ve => FromVarEscape(new VarUse.Escape()));
 
     public static readonly TextParser<RecipeFragment> Parser =
         VarEscapeAsFragmentParser.Try()
@@ -39,15 +35,15 @@ public record RecipeFragment(
     public string ToCommandFragment(IReadOnlyDictionary<string, string> variables)
     {
         if (Literal is not null) return Literal;
-        if (VarUse is not null) return VarUse.ToCommandFragment(variables);
-        if (VarEscape is not null) return VarOpenEscaped.EscapedSymbol;
+        if (Placeholder is not null) return Placeholder.Replace(variables);
+        if (VarEscape is not null) return VarUse.Escape.EscapedSymbol;
         throw new InvalidOperationException("Invalid RecipeFragment: all properties are null.");
     }
 
     override public string ToString()
     {
         if (Literal is not null) return Literal;
-        if (VarUse is not null) return VarUse.ToString();
+        if (Placeholder is not null) return Placeholder.ToString();
         if (VarEscape is not null) return VarEscape.ToString();
         throw new InvalidOperationException("Invalid RecipeFragment: all properties are null.");
     }
