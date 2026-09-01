@@ -1,5 +1,3 @@
-using System.CommandLine;
-
 namespace Tell;
 
 public class RunRuleCommand : ParseOnlyRunRuleCommand
@@ -8,7 +6,7 @@ public class RunRuleCommand : ParseOnlyRunRuleCommand
     private readonly RuleRunner runner;
 
     public RunRuleCommand(RuleRunParams parameters, RuleRunner runner) 
-        : base(parameters.Rule.Target.Identifier.Value, VarUseCommandParams.From(parameters.Rule.VarUses))
+        : base(parameters.Rule.Target.Identifier.Value, VarUseCommandParams.From(parameters.Rule.Placeholders))
     {
         this.parameters = parameters;
         this.runner = runner;
@@ -37,8 +35,6 @@ public class ParseOnlyRunRuleCommand : Command
         : base(name, $"Run the rule '{name}'")
     {
         this.VarUseParams = parameters;
-
-        if (parameters.Argument is not null) Add(parameters.Argument.Value);
-        foreach (var option in parameters.Options) Add(option.Value);
+        this.VarUseParams.AddTo(this);
     }
 }
