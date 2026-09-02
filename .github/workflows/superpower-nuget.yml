@@ -1,0 +1,17 @@
+name: Tell.Superpower NuGet
+on:
+  push:
+    paths:
+      - 'superpower/lib/**'
+      - '.github/workflows/superpower-nuget.yml'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Pack & Publish nuget
+    runs-on: ubuntu-latest
+    steps:
+      - uses: astorDev/versy/calver/nuget@main
+        with:
+          project: superpower/lib/Tell.Superpower
+          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
