@@ -1,0 +1,17 @@
+name: Tell.Makefile NuGet
+on:
+  push:
+    paths:
+      - 'makefile/lib/**'
+      - '.github/workflows/makefile-nuget.yml'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Pack & Publish nuget
+    runs-on: ubuntu-latest
+    steps:
+      - uses: astorDev/versy/calver/nuget@main
+        with:
+          project: makefile/lib/Tell.Makefile
+          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
