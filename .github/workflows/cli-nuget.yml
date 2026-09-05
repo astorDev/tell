@@ -2,8 +2,8 @@ name: Tell.Cli NuGet
 on:
   push:
     paths:
-      # - 'combo/cli/**'
-      - '**' # for now combo has transient dependencies on makefile, var and superpower.
+      - 'cli/**'
+      - 'makefile/lib/**'
       - '.github/workflows/cli-nuget.yml'
   workflow_dispatch:
 

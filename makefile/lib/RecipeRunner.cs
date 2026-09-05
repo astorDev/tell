@@ -18,6 +18,9 @@ public class RecipeRunner(ILogger<RecipeRunner> logger)
         var startInfo = Shell.Sh.ProxyProcessStartInfo(interpolated);
         startInfo.WorkingDirectory = workingDirectory;
         
-        return await startInfo.Run();
+        Console.Write(SelectGraphicRendition.Dim);
+        var result = await startInfo.Run();
+        Console.Write(SelectGraphicRendition.NormalIntensity);
+        return result;
     }
 }
