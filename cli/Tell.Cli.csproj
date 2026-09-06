@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\makefile\lib\Tell.Makefile.csproj" />
+    <ProjectReference Include="..\make\lib\Tell.Makefile.csproj" />
   </ItemGroup>
 
 </Project>

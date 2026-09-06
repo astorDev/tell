@@ -1,7 +1,7 @@
 <Solution>
-    <Project Path="makefile/lib/Tell.Makefile.csproj" />
-    <Project Path="makefile/play/Tell.Makefile.Playground.csproj" />
-    <Project Path="makefile/article/play/Tell.Inspirations.Makefile.Playground.csproj" />
+    <Project Path="make/lib/Tell.Makefile.csproj" />
+    <Project Path="make/play/Tell.Makefile.Playground.csproj" />
+    <Project Path="make/article/play/Tell.Inspirations.Makefile.Playground.csproj" />
     <Project Path="superpower/lib/Tell.Superpower.csproj" />
     <Project Path="superpower/play/Tell.Superpower.Playground.csproj" />
     <Project Path="cli/Tell.Cli.csproj" />
