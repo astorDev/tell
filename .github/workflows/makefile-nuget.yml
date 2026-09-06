@@ -2,7 +2,7 @@ name: Tell.Makefile NuGet
 on:
   push:
     paths:
-      - 'makefile/lib/**'
+      - 'make/lib/**'
       - '.github/workflows/makefile-nuget.yml'
   workflow_dispatch:
 
@@ -13,5 +13,5 @@ jobs:
     steps:
       - uses: astorDev/versy/calver/nuget@main
         with:
-          project: makefile/lib/Tell.Makefile
+          project: make/lib/Tell.Makefile
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}

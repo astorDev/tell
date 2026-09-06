@@ -3,7 +3,7 @@ on:
   push:
     paths:
       - 'cli/**'
-      - 'makefile/lib/**'
+      - 'make/lib/**'
       - '.github/workflows/cli-nuget.yml'
   workflow_dispatch:
 
