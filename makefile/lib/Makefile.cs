@@ -6,16 +6,24 @@ global using System.CommandLine;
 
 namespace Tell;
 
-public record Doc(
+public record Makefile(
     IReadOnlyList<DocFragment> Fragments,
     IReadOnlyDictionary<string, Rule> Rules,
     IReadOnlyList<Assignment> Assignments
 )
 {
-    public static readonly TextParser<Doc> Parser =
-        DocFragment.Parser.Many().Select(Doc.From);
+    public static readonly TextParser<Makefile> Parser =
+        DocFragment.Parser.Many().Select(From);
 
-    public static Doc From(IReadOnlyList<DocFragment> fragments)
+    public static Makefile Load(string path)
+    {
+        if (!File.Exists(path)) throw new FileNotFoundException($"Makefile not found at `{path}`.");
+        var fileContent = File.ReadAllText(path);
+        var doc = Parser.Parse(fileContent);
+        return doc;
+    }
+
+    public static Makefile From(IReadOnlyList<DocFragment> fragments)
     {
         var rules = fragments
             .Where(f => f.Rule is not null)
@@ -27,7 +35,7 @@ public record Doc(
             .Select(f => f.Assignment!)
             .ToList();
 
-        return new Doc(fragments, rules, assignments);
+        return new Makefile(fragments, rules, assignments);
     }
 
     public Rule GetRule(string name)

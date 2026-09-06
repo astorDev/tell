@@ -43,7 +43,7 @@ public class Startup : Command
         }
 
         var makefileContent = File.ReadAllText(makefilePath);
-        var doc = Doc.Parser.Parse(makefileContent);
+        var doc = Makefile.Parser.Parse(makefileContent);
 
         return RuleRunParams.From(
             doc, 
