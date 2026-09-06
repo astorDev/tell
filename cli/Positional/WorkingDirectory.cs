@@ -28,12 +28,12 @@ public record WorkingDirectory(string Path, string SearchPath)
         }
 
         var makefileContent = File.ReadAllText(makefilePath);
-        var doc = Doc.Parser.Parse(makefileContent);
+        var doc = Makefile.Parser.Parse(makefileContent);
         return new (makefilePath, doc);
     }
 }
 
 public record MakefileSearchResult(
     string Path,
-    Doc Doc
+    Makefile Doc
 );
