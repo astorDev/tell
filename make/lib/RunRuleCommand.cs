@@ -6,7 +6,7 @@ public class RunRuleCommand : ParseOnlyRunRuleCommand
     private readonly RuleRunner runner;
 
     public RunRuleCommand(RuleRunParams parameters, RuleRunner runner) 
-        : base(parameters.Rule.Target.Identifier.Value, VarUseCommandParams.From(parameters.Rule.Placeholders))
+        : base(parameters.Rule.Target.Identifier.Value, parameters.ToVariablesContext())
     {
         this.parameters = parameters;
         this.runner = runner;
@@ -16,25 +16,23 @@ public class RunRuleCommand : ParseOnlyRunRuleCommand
 
     public async Task Execute(ParseResult parseResult)
     {
-        var variables = this.VarUseParams.GetVarValues(parseResult);
-        variables = parameters.Doc.Assignments.TransformVariables(variables);
-
         await runner.Run(
             parameters.Rule.Recipes, 
             parameters.WorkingDirectory, 
-            variables
+            VariablesContext,
+            parseResult
         );
     }
 }
 
 public class ParseOnlyRunRuleCommand : Command
 {    
-    public VarUseCommandParams VarUseParams { get; }
+    public VariablesContext VariablesContext { get; }
 
-    protected ParseOnlyRunRuleCommand(string name, VarUseCommandParams parameters) 
+    protected ParseOnlyRunRuleCommand(string name, VariablesContext variablesContext) 
         : base(name, $"Run the rule '{name}'")
     {
-        this.VarUseParams = parameters;
-        this.VarUseParams.AddTo(this);
+        this.VariablesContext = variablesContext;
+        this.VariablesContext.VarUseParams.AddTo(this);
     }
 }

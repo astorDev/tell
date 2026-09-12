@@ -9,9 +9,9 @@ public class EffectiveTellCommand : RootCommand
             Add(command);
         }
 
-        foreach (var option in defaultRuleCommand.VarUseParams.Options)
+        foreach (var option in defaultRuleCommand.Options)
         {
-            Add(option.Value);
+            Add(option);
         }
 
         foreach (var argument in defaultRuleCommand.Arguments)
@@ -37,9 +37,9 @@ public class InfoTellCommand : RootCommand
             Add(command);
         }
 
-        foreach (var option in defaultRuleCommand.VarUseParams.Options)
+        foreach (var option in defaultRuleCommand.Options)
         {
-            Add(option.Value);
+            Add(option);
         }
     }
 }
