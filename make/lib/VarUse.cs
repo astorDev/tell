@@ -12,9 +12,9 @@ public record VarUse
 
     public record Escape
     {
-        public const string Symbol = "$$(";
+        public const string Symbol = "$$";
         public const string TokenKey = "VarOpenEscaped";
-        public const string EscapedSymbol = "$(";
+        public const string EscapedSymbol = "$";
 
         public static readonly TextParser<TextSpan> SpanParser = Span.EqualTo(Symbol);
 
