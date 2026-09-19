@@ -8,5 +8,9 @@ greeting:
 farewell:
 	echo "Goodbye, $(NAME)!"
 
+path:
+	echo $$PATH | tr ':' '\n'
+
 nano:
 	nano example.Makefile
+

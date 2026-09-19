@@ -1,33 +1,19 @@
-using Superpower;
-
 namespace Tell.Playground;
 
 [TestClass]
 public class RecipeTests
 {
-    [TestMethod]
-    public void Basic()
+    [TestMethod] public void Basic() => Check("dotnet run --environment $(ENV)", new () { { "ENV", "dev" } });
+    [TestMethod] public void WithNewLineInTheEnd() => Check("dotnet run --environment $(ENV)\n", new () { { "ENV", "dev" } });
+    [TestMethod] public void WithVariableEscaped() => Check("echo $$PATH", null);
+    [TestMethod] public void WithFunctionCallEscaped() => Check("echo $$(date)", null);
+
+    public void Check(string recipeContent, Dictionary<string, string>? variables = null)
     {
-        var recipe = 
-"""
-    dotnet run --environment $(ENV)
-""";
-
-        var parsed = Recipe.Parser.Parse(recipe);
-        foreach (var element in parsed.Fragments) Console.WriteLine(element);
-    }
-
-    [TestMethod]
-    public void WithNewLineInTheEnd()
-    {
-        var recipe =
-"""
-    dotnet run --environment $(ENV)
-
-""";
-
-        var parsed = Recipe.Parser.Parse(recipe);
+        var recipeString = "\t" + recipeContent;
+        variables ??= [];
+        var parsed = Recipe.Parser.Parse(recipeString);
         Console.WriteLine(parsed);
-        foreach (var element in parsed.Fragments) Console.WriteLine(element);
+        Console.WriteLine(parsed.ToCommandString(variables));
     }
 }

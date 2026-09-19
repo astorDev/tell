@@ -35,7 +35,7 @@ public record RecipeFragment(
     public string ToCommandFragment(IReadOnlyDictionary<string, string> variables)
     {
         if (Literal is not null) return Literal;
-        if (Placeholder is not null) return Placeholder.Replace(variables);
+        if (Placeholder is not null) return Placeholder.Replace(variables, fallback: "");
         if (VarEscape is not null) return VarUse.Escape.EscapedSymbol;
         throw new InvalidOperationException("Invalid RecipeFragment: all properties are null.");
     }

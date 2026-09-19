@@ -10,7 +10,7 @@ public record Recipe(
     public static readonly TextParser<Recipe> Parser =
         from t in Tab.Parser
         from f in RecipeFragment.Parser.Many()
-        from le in NewLine.SpanParser.OptionalOrDefault()
+        from le in NewLine.SpanParser.Or(EndOfString.SpanParser)
         select new Recipe(f, le);
 
     public const string TokenKind = "Recipe";
@@ -41,4 +41,12 @@ public static class RecipeExtensions
 {
     public static TokenizerBuilder<T> MatchRecipe<T>(this TokenizerBuilder<T> builder, T kind) => builder.Match(Recipe.SpanParser, kind);
     public static TokenizerBuilder<string> MatchRecipe(this TokenizerBuilder<string> builder) => builder.MatchRecipe(Recipe.TokenKind);
+}
+
+public static class EndOfString
+{
+    public static readonly TextParser<TextSpan> SpanParser = input =>
+        input.IsAtEnd
+            ? Result.Value(TextSpan.Empty, input, input)
+            : Result.Empty<TextSpan>(input, "end of input");
 }
