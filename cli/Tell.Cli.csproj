@@ -11,8 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hesive.Apps" Version="2026.109.122.2" />
     <PackageReference Include="NiceShell.Cli" Version="2026.108.104.12" />
-    <PackageReference Include="NiceShell.Logger" Version="2026.108.101.5" />
+    <PackageReference Include="NiceShell.Logger" Version="2026.109.119.9" />
   </ItemGroup>
 
   <ItemGroup>

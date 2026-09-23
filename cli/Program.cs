@@ -1,22 +1,23 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Hesive;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Tell;
 
-var builder = new CliBuilder();
+var builder = new AppBuilder();
 
+builder.Configuration.AddLoggingCliOptions(args);
 builder.Logging.AddNiceShell();
-builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 builder.Services.AddSingleton<RuleRunner>();
 builder.Services.AddSingleton<RecipeRunner>();
 
-builder.AddCommand<EntryGate>();
+builder.Services.AddSingleton<EntryGate>();
 
-using var app = builder.Build("A tell CLI application.");
+var app = builder.Build();
 
-var gate = app.Services.GetRequiredService<EntryGate>();
-var logger = app.Services.GetRequiredService<ILogger<Program>>();
-var runner = app.Services.GetRequiredService<RuleRunner>();
+var gate = app.ServiceProvider.GetRequiredService<EntryGate>();
+var logger = app.ServiceProvider.GetRequiredService<ILogger<Program>>();
+var runner = app.ServiceProvider.GetRequiredService<RuleRunner>();
 
 try
 {
@@ -28,16 +29,15 @@ try
 
     var defaultRuleRunCommand = new RunRuleCommand(runParams, runner);
 
-    Command tell = gateParseResult.Action is not null
-        ? new InfoTellCommand(allRuleRunCommands, defaultRuleRunCommand)
-        : new EffectiveTellCommand(allRuleRunCommands, defaultRuleRunCommand);
+    var tell = new TellCommand(allRuleRunCommands, defaultRuleRunCommand);
+    tell.AddLoggingCliOptions();
 
-    logger.LogDebug("Executing tell command with args: {Args}", runParams.Args);
+    logger.LogDebug("Executing tell command with original args: {Args}", runParams.Args);
 
-    await tell.Parse(runParams.Args).InvokeAsync();
+    return await tell.Parse(args).InvokeAsync();
 }
 catch (Exception ex)
 {
     logger.LogError("{Message}", ex.Message);
-    Environment.Exit(1);
+    return 1;
 }

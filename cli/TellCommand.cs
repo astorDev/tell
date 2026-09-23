@@ -1,31 +1,8 @@
 namespace Tell;
 
-public class EffectiveTellCommand : RootCommand
+public class TellCommand : RootCommand
 {
-    public EffectiveTellCommand(IEnumerable<RunRuleCommand> allCommands, RunRuleCommand defaultRuleCommand) : base("tell")
-    {
-        foreach (var command in allCommands)
-        {
-            Add(command);
-        }
-
-        foreach (var option in defaultRuleCommand.Options)
-        {
-            Add(option);
-        }
-
-        foreach (var argument in defaultRuleCommand.Arguments)
-        {
-            Add(argument);
-        }
-
-        SetAction(defaultRuleCommand.Execute);
-    }
-}
-
-public class InfoTellCommand : RootCommand
-{
-    public InfoTellCommand(IEnumerable<RunRuleCommand> allCommands, RunRuleCommand defaultRuleCommand) : base("tell")
+    public TellCommand(IEnumerable<RunRuleCommand> allCommands, RunRuleCommand defaultRuleCommand) : base("tell")
     {
         Add(TellCommandParams.firstArgument);
         Add(TellCommandParams.secondArgument);
@@ -41,5 +18,7 @@ public class InfoTellCommand : RootCommand
         {
             Add(option);
         }
+
+        SetAction(defaultRuleCommand.Execute);
     }
 }
