@@ -34,5 +34,6 @@ public class ParseOnlyRunRuleCommand : Command
     {
         this.VariablesContext = variablesContext;
         this.VariablesContext.VarUseParams.AddTo(this);
+        this.TreatUnmatchedTokensAsErrors = false;
     }
 }

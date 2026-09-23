@@ -30,17 +30,21 @@ public class EntryGate : RootCommand
 
         if (third is not null)
         {
+            logger.LogTrace("Matching tell command with case 3 arguments");
             return Case3Args.GetRuleRunParams(first!, second!, third, file, resuppliedTokens);
         }
         if (second is not null)
         {
+            logger.LogTrace("Matching tell command with case 2 arguments");
             return Case2Args.GetRuleRunParams(first!, second!, file, resuppliedTokens);
         }
         if (first is not null)
         {
-            return Case1Args.GetRuleRunParams(first!, file, resuppliedTokens);
+            logger.LogTrace("Matching tell command with case 1 argument");
+            return Case1Args.GetRuleRunParams(first!, file, resuppliedTokens, logger);
         }
 
+        logger.LogTrace("Matching tell command with case 0 arguments");
         return Case0Args.GetRuleRunParams(file, resuppliedTokens);
     }
 
