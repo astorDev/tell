@@ -9,12 +9,13 @@ public static class Case3Args
             throw new ArgumentException($"Directory `{workingDirectory.SearchPath}` doesn't exists. (First positional argument: '{firstArgument}' was used as a working directory, since 3 were passed.)");
         }
 
-        var extracted = workingDirectory.GetMakefile(file);
-        if (!extracted.Doc.Rules.TryGetValue(secondArgument, out var rule))
+        var extracted = workingDirectory.MakefileParsing(file);
+        var doc = extracted.DocOrThrowParsingError();
+        if (!doc.Rules.TryGetValue(secondArgument, out var rule))
         {
             throw new ArgumentException($"Rule '{secondArgument}' not found in `{extracted.Path}`. (Second positional argument: `{secondArgument}` was used as a target since 3 were provided.)");
         }
 
-        return new RuleRunParams(rule, extracted.Doc, workingDirectory.Path, [ thirdArgument, ..unmatchedTokens ]);
+        return new RuleRunParams(rule, doc, workingDirectory.Path, [ thirdArgument, ..unmatchedTokens ]);
     }
 }

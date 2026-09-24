@@ -16,7 +16,7 @@ public class EntryGate : RootCommand
         this.logger = logger;
     }
 
-    public RuleRunParams RunRuleParamsFrom(ParseResult parseResult)
+    public MatchingResult Match(ParseResult parseResult)
     {
         var parameters = TellCommandParams.From(parseResult);
         
@@ -48,9 +48,17 @@ public class EntryGate : RootCommand
         return Case0Args.GetRuleRunParams(file, resuppliedTokens);
     }
 
-    public RuleRunParams GetRunRuleParams(string[] args)
+    public MatchingResult GetRunRuleParams(string[] args)
     {
         var parseResult = Parse(args);
-        return RunRuleParamsFrom(parseResult);
+        return Match(parseResult);
     }
 }
+
+public record MatchingResult(MakeFallbackParams? Fallback = null, RuleRunParams? Run = null)
+{
+    public static implicit operator MatchingResult(RuleRunParams rule) => new(null, rule);
+    public static implicit operator MatchingResult(MakeFallbackParams fallback) => new(fallback, null);
+}
+
+public record MakeFallbackParams(Exception ParsingError, string? WorkingDirectoryChange, string? RuleName);
