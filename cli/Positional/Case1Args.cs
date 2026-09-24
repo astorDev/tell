@@ -4,7 +4,7 @@ namespace Tell;
 
 internal class Case1Args
 {
-    internal static RuleRunParams GetRuleRunParams(string firstArgument, string? file, IReadOnlyList<string> unmatchedTokens, ILogger logger)
+    internal static MatchingResult GetRuleRunParams(string firstArgument, string? file, IReadOnlyList<string> unmatchedTokens, ILogger logger)
     {
         return WorkingDirectory.TryUse(firstArgument, out var workingDirectory)
             ? FirstIsWorkingDirectory(workingDirectory, file, unmatchedTokens, logger)
@@ -13,13 +13,15 @@ internal class Case1Args
 
     private static RuleRunParams FirstArgIsNotWorkingDirectory(WorkingDirectory workingDirectory, string firstArgument, string? file, IReadOnlyList<string> unmatchedTokens, ILogger logger)
     {
-        var found = workingDirectory.GetMakefile(file);
-        if (found.Doc.Rules.TryGetValue(firstArgument, out var rule))
+        var found = workingDirectory.MakefileParsing(file);
+        var doc = found.DocOrThrowParsingError();
+
+        if (doc.Rules.TryGetValue(firstArgument, out var rule))
         {
-            return new RuleRunParams(rule, found.Doc, workingDirectory.Path, unmatchedTokens);
+            return new RuleRunParams(rule, doc, workingDirectory.Path, unmatchedTokens);
         }
 
-        var firstRule = found.Doc.FirstRule;
+        var firstRule = doc.FirstRule;
 
         var anyArgs = firstRule.Placeholders.Any();
         if (!anyArgs)
@@ -28,12 +30,16 @@ internal class Case1Args
         }
 
         logger.LogTrace("Treating first and only argument ({FirstArgument}) as a value of the first rule ({FirstRule}) first placeholder ({Target})", firstArgument, firstRule.Name, firstRule.Placeholders.First().Identifier);
-        return new RuleRunParams(firstRule, found.Doc, workingDirectory.Path, [firstArgument, .. unmatchedTokens]);
+        return new RuleRunParams(firstRule, doc, workingDirectory.Path, [firstArgument, .. unmatchedTokens]);
     }
 
-    public static RuleRunParams FirstIsWorkingDirectory(WorkingDirectory workingDirectory, string? file, IReadOnlyList<string> unmatchedTokens, ILogger logger)
+    public static MatchingResult FirstIsWorkingDirectory(WorkingDirectory workingDirectory, string? file, IReadOnlyList<string> unmatchedTokens, ILogger logger)
     {
-        var found = workingDirectory.GetMakefile(file);
-        return new RuleRunParams(found.Doc.FirstRule, found.Doc, workingDirectory.Path, unmatchedTokens);
+        var parsing = workingDirectory.MakefileParsing(file);
+        return parsing.Match<MatchingResult>(
+            onSuccess: doc => new RuleRunParams(doc.FirstRule, doc, workingDirectory.Path, unmatchedTokens),
+            onParsingError: ex => new MakeFallbackParams(ex, workingDirectory.Change, null)
+        );
     }
 }
+
