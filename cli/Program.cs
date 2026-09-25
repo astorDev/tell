@@ -1,4 +1,5 @@
-﻿using Hesive;
+﻿using System.Diagnostics;
+using Hesive;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Tell;
@@ -26,7 +27,11 @@ try
     if (matchingResult.Fallback is not null)
     {
         logger.LogTrace("Unable to parse Makefile: {Fallback}", matchingResult.Fallback.ParsingError.Message);
-        throw new NotImplementedException("Fallback handling not implemented");
+        var makeArguments = matchingResult.Fallback.ToMakeArguments();
+        logger.LogDebug("Falling back to make with arguments: {MakeArguments}", makeArguments);
+        var makeProxy = new ProcessStartInfo("make", makeArguments);
+        var result = await makeProxy.Run();
+        return result.ExitCode;
     }
 
     var runParams = matchingResult.Run!;
