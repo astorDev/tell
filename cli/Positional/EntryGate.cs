@@ -61,4 +61,3 @@ public record MatchingResult(MakeFallbackParams? Fallback = null, RuleRunParams?
     public static implicit operator MatchingResult(MakeFallbackParams fallback) => new(fallback, null);
 }
 
-public record MakeFallbackParams(Exception ParsingError, string? WorkingDirectoryChange, string? RuleName);

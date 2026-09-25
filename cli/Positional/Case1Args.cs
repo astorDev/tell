@@ -38,7 +38,7 @@ internal class Case1Args
         var parsing = workingDirectory.MakefileParsing(file);
         return parsing.Match<MatchingResult>(
             onSuccess: doc => new RuleRunParams(doc.FirstRule, doc, workingDirectory.Path, unmatchedTokens),
-            onParsingError: ex => new MakeFallbackParams(ex, workingDirectory.Change, null)
+            onParsingError: ex => new MakeFallbackParams(ex, workingDirectory.Change, RuleName: null, Filename: file)
         );
     }
 }
