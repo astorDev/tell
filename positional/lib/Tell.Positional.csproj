@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Tell</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Copaster.Case" Version="2026.109.126.4" />
+    <PackageReference Include="Copaster.IO" Version="2026.109.126.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\make\lib\Tell.Makefile.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.CommandLine" />
+    <Using Include="System.CommandLine.Parsing" />
+    <Using Include="Copaster" />
+  </ItemGroup>
+
+</Project>

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Hesive;
+﻿using Hesive;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Tell;
@@ -12,43 +11,61 @@ builder.Logging.AddNiceShell();
 builder.Services.AddSingleton<RuleRunner>();
 builder.Services.AddSingleton<RecipeRunner>();
 
-builder.Services.AddSingleton<EntryGate>();
-
 var app = builder.Build();
 
-var gate = app.ServiceProvider.GetRequiredService<EntryGate>();
-var logger = app.ServiceProvider.GetRequiredService<ILogger<Program>>();
-var runner = app.ServiceProvider.GetRequiredService<RuleRunner>();
+var runner = app.Services.GetRequiredService<RuleRunner>();
 
 try
 {
-    var gateParseResult = gate.Parse(args);
-    var matchingResult = gate.Match(gateParseResult);
-    if (matchingResult.Fallback is not null)
+    var tell = new RootCommand("Executes commands defined in the Makefile");
+    tell.AddLoggingCliOptions();
+    tell.AddTellContextSymbols();
+
+    ParseResult initialPass;
+
+    try
     {
-        logger.LogTrace("Unable to parse Makefile: {Fallback}", matchingResult.Fallback.ParsingError.Message);
-        var makeArguments = matchingResult.Fallback.ToMakeArguments();
-        logger.LogDebug("Falling back to make with arguments: {MakeArguments}", makeArguments);
-        var makeProxy = new ProcessStartInfo("make", makeArguments);
-        var result = await makeProxy.Run();
-        return result.ExitCode;
+        initialPass = tell.Parse(args);
+    }
+    catch (Superpower.ParseException ex)
+    {
+        app.Logger.LogWarning("Failed to parse Makefile: {Message}. Trying fallback to make.", ex.Message);
+        throw new NotImplementedException("Fallback to make is not implemented yet.");
     }
 
-    var runParams = matchingResult.Run!;
-    var allRuleRunCommands = runParams.Doc.Rules.Select(r => new RunRuleCommand(
-        new RuleRunParams(r.Value, runParams.Doc, runParams.WorkingDirectory, runParams.Args), runner));
+    var context = initialPass.GetRequiredValue(TellContext.Argument);
+    var makefile = context.Makefile;
+    var firstRuleSymbols = ReplacementSymbols.AllFor(makefile.FirstRule, makefile.Assignments);
+    tell.Add(firstRuleSymbols);
+    tell.Description = tell.Description + $"\nRuns the first rule ({makefile.FirstRule.Name}) by default i.e.\n" + $"{RuleInfoCommand.DescriptionFrom(makefile.FirstRule.Recipes)}";
+    tell.SetAction(async parseResult =>
+    {
+        var replacements = firstRuleSymbols.GetMaterializedReplacements(parseResult);
+        await runner.Run(makefile.FirstRule.Recipes, context.WorkingDirectory.Path, replacements);
+    });
+    
+    foreach (var rule in makefile.Rules.Values)
+    {
+        var ruleSymbols = ReplacementSymbols.AllFor(rule, makefile.Assignments);
+        var ruleInfoCommand = new RuleInfoCommand(rule)
+        {
+            ruleSymbols
+        };
+        ruleInfoCommand.AddLoggingCliOptions();
 
-    var defaultRuleRunCommand = new RunRuleCommand(runParams, runner);
+        ruleInfoCommand.SetAction(async parseResult =>
+        {
+            var replacements = ruleSymbols.GetMaterializedReplacements(parseResult);
+            await runner.Run(rule.Recipes, context.WorkingDirectory.Path, replacements);
+        });
 
-    var tell = new TellCommand(allRuleRunCommands, defaultRuleRunCommand);
-    tell.AddLoggingCliOptions();
-
-    logger.LogDebug("Executing tell command with original args: {Args}", runParams.Args);
+        tell.Add(ruleInfoCommand);
+    }
 
     return await tell.Parse(args).InvokeAsync();
 }
 catch (Exception ex)
 {
-    logger.LogError("{Message}", ex.Message);
+    app.Logger.LogError("{Message}", ex.Message);
     return 1;
 }

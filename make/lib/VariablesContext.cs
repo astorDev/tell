@@ -1,6 +1,6 @@
 namespace Tell;
 
-public record VariablesContext(VarUseCommandParams VarUseParams, IReadOnlyList<Assignment> Assignments)
+public record VariablesContext(VarUseCommandParams VarUseParams, IReadOnlyDictionary<string, Assignment> Assignments)
 {
     public IReadOnlyDictionary<string, string> GetFinalVariables(ParseResult parseResult)
     {

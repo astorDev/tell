@@ -63,4 +63,13 @@ public static class RecipeFragmentExtensions
         }
         return sb.ToString();
     }
+
+    public static string ToUnresolvedCommandString(this IEnumerable<RecipeFragment> fragments)
+    {
+        var replacements = fragments
+            .Where(f => f.Placeholder is not null)
+            .ToDictionary(p => p.Placeholder!.Identifier.Value, p => $"$({p.Placeholder!.Identifier.Value})");
+
+        return fragments.ToCommandString(replacements);
+    }
 }
