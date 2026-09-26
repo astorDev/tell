@@ -18,6 +18,12 @@ public record Recipe(
 
     public string ToCommandString(IReadOnlyDictionary<string, string> variables) => this.Fragments.ToCommandString(variables);
 
+    public string ToUnresolvedCommandString()
+    {
+        var replacements = this.Placeholders.ToDictionary(p => p.Identifier.Value, p => $"$({p.Identifier.Value})");
+        return this.Fragments.ToCommandString(replacements);
+    }
+
     public override string ToString()
     {
         var sb = new StringBuilder();
@@ -34,7 +40,10 @@ public record Recipe(
         return sb.ToString();
     }
 
-    public IEnumerable<Placeholder> Placeholders => Fragments.Select(f => f.Placeholder).Where(p => p is not null)!;
+    public IEnumerable<Placeholder> Placeholders => Fragments
+        .Where(f => f.Placeholder is not null)
+        .Select(f => f.Placeholder!)
+        .Distinct();
 }
 
 public static class RecipeExtensions
