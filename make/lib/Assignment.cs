@@ -30,13 +30,13 @@ public record Assignment(
     }
 }
 
-public static class AssigmentExtesions
+public static class AssignmentExtensions
 {
-    public static IReadOnlyDictionary<string, string> TransformVariables(this IEnumerable<Assignment> assignments, IReadOnlyDictionary<string, string> existingVariables)
+    public static IReadOnlyDictionary<string, string> TransformVariables(this IReadOnlyDictionary<string, Assignment> assignments, IReadOnlyDictionary<string, string> existingVariables)
     {
         var variables = new Dictionary<string, string>(existingVariables);
 
-        foreach (var assignment in assignments) // TODO: Order assignments by their dependencies (e.g., if one variable depends on another)
+        foreach (var assignment in assignments.Values) // TODO: Order assignments by their dependencies (e.g., if one variable depends on another)
         {
             var variableToSet = assignment.OptionalVariableToSet(variables);
             if (variableToSet is not null)

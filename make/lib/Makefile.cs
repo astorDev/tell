@@ -9,7 +9,7 @@ namespace Tell;
 public record Makefile(
     IReadOnlyList<DocFragment> Fragments,
     IReadOnlyDictionary<string, Rule> Rules,
-    IReadOnlyList<Assignment> Assignments
+    IReadOnlyDictionary<string, Assignment> Assignments
 )
 {
     public static readonly TextParser<Makefile> Parser =
@@ -33,7 +33,7 @@ public record Makefile(
         var assignments = fragments
             .Where(f => f.Assignment is not null)
             .Select(f => f.Assignment!)
-            .ToList();
+            .ToDictionary(a => a.Target.Value, a => a);
 
         return new Makefile(fragments, rules, assignments);
     }

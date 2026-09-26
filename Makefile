@@ -1,6 +1,9 @@
 lib:
-	dotnet new lib --name Tell.$(MODULE) --output `cameled $(MODULE)/lib`
-	copaster/magic `cameled $(MODULE)/lib`
+	dotnet new lib --output $(MODULE)/lib
+	copaster-magic $(MODULE)/lib --project=Tell --module=$(MODULE)
+
+play-lib-ref:
+	dotnet add `cameled $(MODULE)/play` reference `cameled $(MODULE)/lib`
 
 cli-play:
 	dotnet new cli-play --name Tell.$(MODULE) --output `cameled $(MODULE)/play`

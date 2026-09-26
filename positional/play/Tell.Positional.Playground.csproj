@@ -12,8 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Copaster.Case" Version="2026.109.126.2" />
-    <PackageReference Include="Copaster.IO" Version="2026.109.126.2" />
     <PackageReference Include="Hesive.Apps" Version="2026.109.122.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
     <PackageReference Include="MSTest" Version="3.9.1" />
@@ -32,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\make\lib\Tell.Makefile.csproj" />
+    <ProjectReference Include="..\lib\Tell.Positional.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,16 +1,36 @@
 using Hesive;
-using Microsoft.Extensions.DependencyInjection;
+using Tell;
 
 var builder = new AppBuilder();
 
 builder.Logging.AddNiceShell();
 
-builder.Services.AddSingleton<GateCommand>();
-
 var app = builder.Build();
 
-var gateCommand = app.ServiceProvider.GetRequiredService<GateCommand>();
-var gateParseResult = gateCommand.Parse(args);
-var effectiveCommand = gateCommand.GetEffectiveCommand(gateParseResult);
+var rootCommand = new RootCommand();
+rootCommand.AddTellContextSymbols();
 
-await effectiveCommand.Parse(args).InvokeAsync();
+var initialParseResult = rootCommand.Parse(args);
+var tellContext = initialParseResult.GetRequiredValue(TellContext.Argument);
+
+foreach (var rule in tellContext.Makefile.Rules.Values)
+{
+    var replacementSymbols = ReplacementSymbols.AllFor(rule, tellContext.Makefile.Assignments);
+    var printingCommand = new RulePrintingCommand(rule, replacementSymbols);
+    rootCommand.Add(printingCommand);
+}
+
+await rootCommand.Parse(args).InvokeAsync();
+
+public class RulePrintingCommand(Rule rule, IReadOnlyList<ReplacementSymbols> replacementSymbols) : RuleCommandBase(rule, replacementSymbols)
+{
+    public override void Execute(IReadOnlyDictionary<string, string> replacements)
+    {
+        Console.WriteLine("Materialized replacements:");
+
+        foreach (var kvp in replacements)
+        {
+            Console.WriteLine($"  {kvp.Key} = {kvp.Value}");
+        }
+    }
+}
