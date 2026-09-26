@@ -57,4 +57,18 @@ public static class ReplacementSymbolsExtensions
             replacementSymbol.AddTo(command);
         }
     }
+
+    public static void Add(this Command command, IEnumerable<ReplacementSymbols> replacementSymbols)
+    {
+        foreach (var replacementSymbol in replacementSymbols)
+        {
+            replacementSymbol.AddTo(command);
+        }
+    }
+
+    public static IReadOnlyDictionary<string, string> GetMaterializedReplacements(this IEnumerable<ReplacementSymbols> replacementSymbols, ParseResult parseResult)
+    {
+        var replacementRules = replacementSymbols.Select(rs => rs.GetValue(parseResult));
+        return replacementRules.Materialize();
+    }
 }

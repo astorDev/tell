@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hesive.Apps" Version="2026.109.122.2" />
+    <PackageReference Include="Hesive.Apps" Version="2026.109.126.4" />
     <PackageReference Include="NiceShell.Cli" Version="2026.108.104.12" />
     <PackageReference Include="NiceShell.Logger" Version="2026.109.119.9" />
   </ItemGroup>
@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\make\lib\Tell.Makefile.csproj" />
+    <ProjectReference Include="..\positional\lib\Tell.Positional.csproj" />
   </ItemGroup>
 
 </Project>

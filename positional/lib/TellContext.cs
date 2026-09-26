@@ -11,7 +11,7 @@ public static class TellContextExtensions
     }
 }
 
-public record TellContext(Folder Folder, Makefile Makefile)
+public record TellContext(Folder WorkingDirectory, Makefile Makefile)
 {
     public class Command : System.CommandLine.Command
     {

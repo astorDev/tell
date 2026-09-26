@@ -24,7 +24,7 @@ await rootCommand.Parse(args).InvokeAsync();
 
 public class RulePrintingCommand(Rule rule, IReadOnlyList<ReplacementSymbols> replacementSymbols) : RuleCommandBase(rule, replacementSymbols)
 {
-    public override void Execute(IReadOnlyDictionary<string, string> replacements)
+    public override async Task Execute(IReadOnlyDictionary<string, string> replacements)
     {
         Console.WriteLine("Materialized replacements:");
 

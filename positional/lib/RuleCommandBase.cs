@@ -11,13 +11,13 @@ public abstract class RuleCommandBase : RuleInfoCommand
         this.SetAction(Execute);
     }
 
-    public void Execute(ParseResult parseResult)
+    public async Task Execute(ParseResult parseResult)
     {
         var replacementRules = replacementSymbols.Select(rs => rs.GetValue(parseResult));
         var materializedReplacements = replacementRules.Materialize();
 
-        Execute(materializedReplacements);
+        await Execute(materializedReplacements);
     }
 
-    public abstract void Execute(IReadOnlyDictionary<string, string> replacements);
+    public abstract Task Execute(IReadOnlyDictionary<string, string> replacements);
 }
