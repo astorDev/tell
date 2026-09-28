@@ -24,3 +24,15 @@ public class RecipeRunner(ILogger<RecipeRunner> logger)
         return result;
     }
 }
+
+public static class RecipeRunnerExtensions
+{
+    public static async Task RunAll(this RecipeRunner recipeRunner, IEnumerable<Recipe> recipes, string workingDirectory, IReadOnlyDictionary<string, string> variables)
+    {
+        foreach (var recipe in recipes)
+        {
+            using var process = await recipeRunner.Run(recipe, workingDirectory, variables);
+            if (process.ExitCode != 0) throw new Exception($"Recipe failed with exit code {process.ExitCode}: {recipe}");
+        }
+    }
+}
