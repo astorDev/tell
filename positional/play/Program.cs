@@ -7,11 +7,14 @@ builder.Logging.AddNiceShell();
 
 var app = builder.Build();
 
-var rootCommand = new RootCommand();
-rootCommand.AddTellContextSymbols();
+var rootCommand = new RootCommand()
+{
+    TellFileSystem.Symbols
+};
 
 var initialParseResult = rootCommand.Parse(args);
-var tellContext = initialParseResult.GetRequiredValue(TellContext.Argument);
+var tellFiles = TellFileSystem.From(initialParseResult);
+var tellContext = tellFiles.ToContext();
 
 foreach (var rule in tellContext.Makefile.Rules.Values)
 {
