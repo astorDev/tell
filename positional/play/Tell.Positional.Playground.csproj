@@ -33,4 +33,8 @@
     <ProjectReference Include="..\lib\Tell.Positional.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="tests.Makefile" CopyToOutputDirectory="PreserveNewest" Link="Makefile" />
+  </ItemGroup>
+
 </Project>

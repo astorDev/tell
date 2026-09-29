@@ -21,7 +21,7 @@ public record WorkingDirectory
     public static readonly Argument<Folder> Argument = new("workDir")
     {
         Description = "The working directory.",
-        Arity = ArgumentArity.ExactlyOne,
+        Arity = ArgumentArity.ZeroOrOne,
         DefaultValueFactory = (result) => new("."),
         CustomParser = result =>
         {

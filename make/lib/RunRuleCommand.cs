@@ -2,10 +2,10 @@ namespace Tell;
 
 public class RunRuleCommand : ParseOnlyRunRuleCommand
 {
-    private readonly RuleRunParams parameters;
+    private readonly RuleCommandBuildingParams parameters;
     private readonly RuleRunner runner;
 
-    public RunRuleCommand(RuleRunParams parameters, RuleRunner runner) 
+    public RunRuleCommand(RuleCommandBuildingParams parameters, RuleRunner runner) 
         : base(parameters.Rule.Target.Identifier.Value, parameters.ToVariablesContext())
     {
         this.parameters = parameters;

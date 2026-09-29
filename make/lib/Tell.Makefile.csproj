@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Copaster.IO" Version="2026.109.129.4" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.11" />
     <PackageReference Include="NiceShell.Colors" Version="2026.109.105.1" />
     <PackageReference Include="NiceShell.Proxy" Version="2026.108.130.2" />

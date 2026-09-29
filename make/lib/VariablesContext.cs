@@ -13,7 +13,7 @@ public record VariablesContext(VarUseCommandParams VarUseParams, IReadOnlyDictio
 
 public static class VariablesContextExtensions
 {
-    public static VariablesContext ToVariablesContext(this RuleRunParams parameters)
+    public static VariablesContext ToVariablesContext(this RuleCommandBuildingParams parameters)
     {
         var varUseParams = VarUseCommandParams.From(parameters.Rule.Placeholders);
         return new(varUseParams, parameters.Doc.Assignments);
