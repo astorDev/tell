@@ -20,7 +20,7 @@ feature-branch:
 pr:
 	test "$$(git default-branch)" != "$$(git branch --show-current)" || throw "Current branch is default ($$(git branch --show-current)). This is likely a mistake, PRs should be created from a feature branch."
 	git save "$(TITLE)"
-	tell finalize-pr $(TITLE)
+	tell finalize-pr "$(TITLE)"
 
 finalize-pr:
 	gh pr create --title "$(TITLE)" --body "" || true
