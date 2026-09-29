@@ -2,30 +2,18 @@ using Tell;
 
 public static class Running
 {
-    public static void HandleTellRunning(this Command tell, TellContext context, RecipeRunner runner)
+    public static void HandleTellRunning(this Command tell, TellContext context, RuleRunner runner)
     {
-        tell.HandleRunning(context.Makefile.FirstRule, context, runner);
+        tell.MakeRuleCommand(context.Makefile.FirstRule, context, runner.Run);
 
         foreach (var rule in context.Makefile.Rules.Values)
         {
             var ruleCommand = new RuleInfoCommand(rule);
             ruleCommand.AddLoggingCliOptions();
 
-            ruleCommand.HandleRunning(rule, context, runner);
+            ruleCommand.MakeRuleCommand(rule, context, runner.Run);
 
             tell.Add(ruleCommand);
         }
-    }
-
-    public static void HandleRunning(this Command command, Rule rule, TellContext context, RecipeRunner runner)
-    {
-        var ruleSymbols = ReplacementSymbols.AllFor(rule, context.Makefile.Assignments);
-        command.Add(ruleSymbols);
-
-        command.SetAction(async parseResult =>
-        {
-            var replacements = ruleSymbols.GetMaterializedReplacements(parseResult);
-            await runner.RunAll(rule.Recipes, context.WorkingDirectory.Path, replacements);
-        });
     }
 }

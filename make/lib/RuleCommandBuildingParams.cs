@@ -1,6 +1,6 @@
 namespace Tell;
 
-public record RuleRunParams(
+public record RuleCommandBuildingParams(
     Rule Rule,
     Makefile Doc,
     string WorkingDirectory,
@@ -9,7 +9,7 @@ public record RuleRunParams(
 {
     override public string ToString() => $"RuleRunParams\n{Rule}\nWorkingDirectory: {WorkingDirectory}\nArgs: [{string.Join(", ", Args)}])";
 
-    public static RuleRunParams From(Makefile doc, string? ruleName, string workingDirectory, IReadOnlyList<string> args)
+    public static RuleCommandBuildingParams From(Makefile doc, string? ruleName, string workingDirectory, IReadOnlyList<string> args)
     {
         var rule = ruleName != null ? doc.GetRule(ruleName) : doc.FirstRule;
         return new(

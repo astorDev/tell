@@ -24,7 +24,7 @@ public record Recipe(
         return this.Fragments.ToCommandString(replacements);
     }
 
-    public override string ToString()
+    public string ToDiagnosticString()
     {
         var sb = new StringBuilder();
         foreach (var fragment in Fragments)
@@ -39,6 +39,8 @@ public record Recipe(
 
         return sb.ToString();
     }
+
+    public override string ToString() => ToUnresolvedCommandString();
 
     public IEnumerable<Placeholder> Placeholders => Fragments
         .Where(f => f.Placeholder is not null)

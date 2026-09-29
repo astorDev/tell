@@ -28,7 +28,7 @@ public class Startup : Command
         this.logger = logger;
     }
 
-    public RuleRunParams Interpret(ParseResult parseResult)
+    public RuleCommandBuildingParams Interpret(ParseResult parseResult)
     {
         var file = parseResult.GetValue(fileOption) ?? "Makefile";
         var workingDirectory = Directory.GetCurrentDirectory();
@@ -45,7 +45,7 @@ public class Startup : Command
         var makefileContent = File.ReadAllText(makefilePath);
         var doc = Makefile.Parser.Parse(makefileContent);
 
-        return RuleRunParams.From(
+        return RuleCommandBuildingParams.From(
             doc, 
             targetName, 
             workingDirectory, 

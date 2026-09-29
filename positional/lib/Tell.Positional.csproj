@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <PackageReference Include="Copaster.Case" Version="2026.109.126.4" />
-    <PackageReference Include="Copaster.IO" Version="2026.109.126.2" />
   </ItemGroup>
 
   <ItemGroup>

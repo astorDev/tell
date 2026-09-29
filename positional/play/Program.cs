@@ -16,24 +16,31 @@ var initialParseResult = rootCommand.Parse(args);
 var tellFiles = TellFileSystem.From(initialParseResult);
 var tellContext = tellFiles.ToContext();
 
+rootCommand.MakeRuleCommand(tellContext.Makefile.FirstRule, tellContext, x =>
+{
+    Console.WriteLine(x);
+    return 0;
+});
+
 foreach (var rule in tellContext.Makefile.Rules.Values)
 {
-    var replacementSymbols = ReplacementSymbols.AllFor(rule, tellContext.Makefile.Assignments);
-    var printingCommand = new RulePrintingCommand(rule, replacementSymbols);
-    rootCommand.Add(printingCommand);
+    var ruleCommand = new RuleInfoCommand(rule).MakeRuleCommand(rule, tellContext, x =>
+    {
+        Console.WriteLine(x);
+        return 0;
+    });
+
+    rootCommand.Add(ruleCommand);
 }
 
 await rootCommand.Parse(args).InvokeAsync();
 
-public class RulePrintingCommand(Rule rule, IReadOnlyList<ReplacementSymbols> replacementSymbols) : RuleCommandBase(rule, replacementSymbols)
+static void PrintReplacements(IReadOnlyDictionary<string, string> replacements)
 {
-    public override async Task Execute(IReadOnlyDictionary<string, string> replacements)
-    {
-        Console.WriteLine("Materialized replacements:");
+    Console.WriteLine("Materialized replacements:");
 
-        foreach (var kvp in replacements)
-        {
-            Console.WriteLine($"  {kvp.Key} = {kvp.Value}");
-        }
+    foreach (var kvp in replacements)
+    {
+        Console.WriteLine($"  {kvp.Key} = {kvp.Value}");
     }
 }

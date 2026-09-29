@@ -13,7 +13,7 @@ builder.Services.AddSingleton<RecipeRunner>();
 
 var app = builder.Build();
 
-return await app.RunCliAsync(async (RecipeRunner runner) =>
+return await app.RunCliAsync(async (RuleRunner runner) =>
 {
     var root = new RootCommand("Executes commands defined in the Makefile")
     {
