@@ -25,11 +25,11 @@ return await app.RunCliAsync(async (RuleRunner runner) =>
     var initialParse = root.Parse(args);
     var fileSystem = TellFileSystem.From(initialParse);
 
-    TellContext tellContext;
+    TellContext context;
 
     try
     {
-        tellContext = fileSystem.ToContext();
+        context = fileSystem.ToContext();
     }
     catch (Superpower.ParseException ex)
     {
@@ -40,7 +40,16 @@ return await app.RunCliAsync(async (RuleRunner runner) =>
         throw new NotImplementedException("Fallback to make is not implemented yet.");
     }
 
-    root.HandleTellRunning(tellContext, runner);
+    foreach (var rule in context.Makefile.Rules.Values)
+    {
+        var ruleCommand = new RuleInfoCommand(rule);
+        ruleCommand.AddLoggingCliOptions();
 
-    return await root.Parse(args).InvokeAsync();
+        ruleCommand.MakeRuleCommand(rule, context, runner.Run);
+
+        root.Add(ruleCommand);
+    }
+
+    var parsed = root.ParseWithDefaultCommand(args, context.Makefile.FirstRule.Name);
+    return await parsed.InvokeAsync();
 });

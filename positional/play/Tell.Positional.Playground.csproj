@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <None Update="tests.Makefile" CopyToOutputDirectory="PreserveNewest" Link="Makefile" />
+    <None Update="examples\Makefile" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
