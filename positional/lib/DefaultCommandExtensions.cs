@@ -29,6 +29,11 @@ public static class DefaultCommandExtensions
         var rootOnlyParse = rootOnly.Parse(args);
         var rootTokenCount = args.Length - rootOnlyParse.UnmatchedTokens.Count;
 
+        foreach (var invalid in rootOnlyParse.Errors.Select(e => e.SymbolResult).OfType<ArgumentResult>())
+        {
+            rootTokenCount -= invalid.Tokens.Count;
+        }
+
         return rootTokenCount;
     }
 
