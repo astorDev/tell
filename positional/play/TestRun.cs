@@ -5,6 +5,12 @@ public class TellRun
 {
     public static RuleRunParams On(string args)
     {
+        var parts = args.Split(' ').Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+        return On(parts);
+    }
+
+    public static RuleRunParams On(string[] args)
+    {
         RuleRunParams result = default!;
 
         var builder = new AppBuilder();
@@ -22,13 +28,6 @@ public class TellRun
         var tellFiles = TellFileSystem.From(initialParseResult);
         var tellContext = tellFiles.ToContext();
 
-        rootCommand.MakeRuleCommand(tellContext.Makefile.FirstRule, tellContext, (x) =>
-        {
-            result = x;
-            Console.WriteLine(result);
-            return 0;
-        });
-
         foreach (var rule in tellContext.Makefile.Rules.Values)
         {
             var ruleCommand = new RuleInfoCommand(rule).MakeRuleCommand(rule, tellContext, (x) =>
@@ -41,7 +40,11 @@ public class TellRun
             rootCommand.Add(ruleCommand);
         }
 
-        rootCommand.Parse(args).Invoke();
+        Console.WriteLine($"Initial parse result unmatched tokens: {String.Join(", ", initialParseResult.UnmatchedTokens)}");
+
+        var parsed = rootCommand.ParseWithDefaultCommand(args, tellContext.Makefile.FirstRule.Name);
+
+        parsed.Invoke();
 
         return result;
     }
