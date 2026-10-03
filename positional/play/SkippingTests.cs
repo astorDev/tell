@@ -22,7 +22,7 @@ public class SkippingTests
             o.CustomParser = (parsing) =>
             {
 
-                if (NumbersWhitelist.TryGet(parsing, out var value)) return value;
+                if (AlphaBetaGamma.TryGet(parsing, out var value)) return value;
                 return "def-from-parser";
             };
         });
@@ -40,12 +40,12 @@ public class SkippingTests
     }
 }
 
-public class NumbersWhitelist
+public class AlphaBetaGamma
 {
-    public static readonly string[] Values = [ "one", "two", "three" ];
+    public static readonly string[] Values = ["alpha", "beta", "gamma"];
     public static bool Contains(string value) => Values.Contains(value);
 
-    public const string DefaultValue = "one";
+    public const string DefaultValue = "alpha";
 
     public static bool TryGet(ArgumentResult parsing, out string? value)
     {
@@ -54,6 +54,8 @@ public class NumbersWhitelist
         value = allowed ? token : null;
         return allowed;
     }
+
+    public static readonly ConditionalArgument<string> ConditionalArgument = new("conditional", Contains, DefaultValue);
 }
 
 public class SkippingExperimentCommand : Command
@@ -111,9 +113,16 @@ public record SkippingResult(
 {
     public override string ToString() => $"OptionalValue: {OptionalValue}, P1: {P1}, P2: {P2}";
 
-    public static SkippingResult From(ParseResult parseResult, Func<ParseResult, string> OptionValueExtractor) => new(
-        OptionValueExtractor(parseResult),
+    public static SkippingResult From(ParseResult parseResult, Func<ParseResult, string?> OptionValueExtractor) => new(
+        OptionValueExtractor(parseResult) ?? "null",
         parseResult.GetValue(SkippingExperimentCommand.P1),
         parseResult.GetValue(SkippingExperimentCommand.P2)
     );
+
+    public static SkippingResult PrintedFrom(ParseResult parseResult, Func<ParseResult, string?> OptionValueExtractor)
+    {
+        var result = From(parseResult, OptionValueExtractor);
+        Console.WriteLine(result);
+        return result;
+    }
 }
