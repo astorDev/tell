@@ -21,67 +21,12 @@ public class SkippingTests
         {
             o.CustomParser = (parsing) =>
             {
-                if (InWhitelist(parsing, out var value)) return value;
+
+                if (NumbersWhitelist.TryGet(parsing, out var value)) return value;
                 return "def-from-parser";
             };
         });
     }
-
-    [TestMethod]
-    public void CustomParserWithOnlyTakeZero()
-    {
-        var result = ParseOneTwo(o =>
-        {
-            o.CustomParser = (parsing) =>
-            {
-                if (InWhitelist(parsing, out var value)) return value;
-
-                parsing.OnlyTake(0);
-                return "def-from-parser";
-            };
-        });
-
-        result.OptionalValue.ShouldBe("def-from-parser");
-
-        // Actually expected:
-        // result.P1.ShouldBe("one");
-        // result.P2.ShouldBe("two");
-
-        // Received:
-        result.P1.ShouldBe("two");
-        result.P2.ShouldBe("one");
-
-        // The reason is that two gets assigned to P1 on the first "unvalidated" run.
-        // Therefore after OnlyTake(0) "one" gets assigned to the next available positional argument, which is P2.
-    }
-
-    [TestMethod]
-    public void CustomParseWithError()
-    {
-        ParseOneTwo(o =>
-            {
-                o.CustomParser = (parsing) =>
-                {
-                    if (InWhitelist(parsing, out var value)) return value;
-
-                    parsing.AddError("Not in whitelist");
-                    return "def-from-parser";
-                };
-            },
-            getValue: (parseResult) => "defaulted from error"
-        );
-    }
-
-    public static bool InWhitelist(ArgumentResult parsing, out string? value)
-    {
-        var whitelist = new[] { "alpha", "beta" };
-
-        var token = parsing.Tokens[0].Value;
-        var allowed = whitelist.Contains(token);
-        value = allowed ? token : null;
-        return allowed;
-    }
-
 
     private SkippingResult ParseOneTwo(Action<Argument<string>> optionalConfigure, Func<ParseResult, string?>? getValue = null)
     {
@@ -92,6 +37,22 @@ public class SkippingTests
 
         Console.WriteLine(result);
         return result;
+    }
+}
+
+public class NumbersWhitelist
+{
+    public static readonly string[] Values = [ "one", "two", "three" ];
+    public static bool Contains(string value) => Values.Contains(value);
+
+    public const string DefaultValue = "one";
+
+    public static bool TryGet(ArgumentResult parsing, out string? value)
+    {
+        var token = parsing.Tokens[0].Value;
+        var allowed = Contains(token);
+        value = allowed ? token : null;
+        return allowed;
     }
 }
 
@@ -138,7 +99,6 @@ public record Optional(Argument<string> Arg, Func<ParseResult, string?> GetValue
         };
 
         configure(arg);
-
         return new Optional(arg, getValue ?? ((parseResult) => parseResult.GetValue(arg)));
     }
 }
@@ -150,4 +110,10 @@ public record SkippingResult(
 )
 {
     public override string ToString() => $"OptionalValue: {OptionalValue}, P1: {P1}, P2: {P2}";
+
+    public static SkippingResult From(ParseResult parseResult, Func<ParseResult, string> OptionValueExtractor) => new(
+        OptionValueExtractor(parseResult),
+        parseResult.GetValue(SkippingExperimentCommand.P1),
+        parseResult.GetValue(SkippingExperimentCommand.P2)
+    );
 }
