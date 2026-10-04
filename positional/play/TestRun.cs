@@ -21,11 +21,14 @@ public class TellRun
 
         var rootCommand = new RootCommand("Tell Run in Tests")
         {
-            TellFileSystem.Symbols
+            WorkingDirectory.ConditionalArgument,
+            TellFilename.Option
         };
 
         var initialParseResult = rootCommand.Parse(args);
-        var tellFiles = TellFileSystem.From(initialParseResult);
+        var workdir = initialParseResult.GetRequiredValue(WorkingDirectory.ConditionalArgument);
+        var filename = initialParseResult.GetRequiredValue(TellFilename.Option);
+        var tellFiles = TellFileSystem.From(workdir, filename);
         var tellContext = tellFiles.ToContext();
 
         foreach (var rule in tellContext.Makefile.Rules.Values)

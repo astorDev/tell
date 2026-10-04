@@ -104,40 +104,7 @@ public partial class RootCommand : System.CommandLine.RootCommand
     }
 }
 
-public class ConditionalArgument<T>(string name, Func<T, bool> condition, string fallbackInjection) : Argument<T>(name), IArgsPreprocessor
-{
-    public string? GetArgumentToInject(string? candidateArg)
-    {
-        if (candidateArg is null) return fallbackInjection;
-
-        var command = new Command("sniffer") { this };
-        var parsed = command.Parse([candidateArg]);
-        var value = parsed.GetValue(this);
-        if (value is null) return fallbackInjection;
-        
-        var conditionMet = condition(value);
-        return conditionMet ? null : fallbackInjection;
-    }
-}
-
 public interface IArgsPreprocessor
 {
     public string? GetArgumentToInject(string? candidateArg);
-}
-
-public class DefaultSubcommandInjector(RootCommand root, string name) : IArgsPreprocessor
-{
-    public string? GetArgumentToInject(string? candidateArg)
-    {
-        var subcommands = root.Subcommands;
-        if (!subcommands.Any(s => s.Name == name))
-        {
-            throw new InvalidOperationException($"Default subcommand '{name}' is not added to the command.");
-        }
-
-        var isSubcommand = candidateArg is not null
-            && subcommands.Any(s => s.Name == candidateArg || s.Aliases.Contains(candidateArg));
-
-        return isSubcommand ? null : name;
-    }
 }

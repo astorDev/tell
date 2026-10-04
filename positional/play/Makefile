@@ -1,4 +1,4 @@
-ARGS ?= . --name John
+ARGS ?= greet --name John
 GREETING ?= Hello
 NAME ?= Egor
 REPEAT ?= $(GREETING), $(NAME)!$(AFTER)
