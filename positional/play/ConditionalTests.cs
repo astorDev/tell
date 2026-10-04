@@ -46,7 +46,7 @@ public class ConditionalTests
     public void AdvancedCommand()
     {
         var conditional = AlphaBetaGamma.ConditionalArgument;
-        var command = new Nishe.RootCommand()
+        var command = new Nishe.RootCommand("Advanced command with conditional argument")
         {
             conditional,
             SkippingExperimentCommand.P1,
@@ -80,7 +80,7 @@ public class ConditionalTests
         var name = new Option<string>("--name");
         var flag = new Option<bool>("--flag");
 
-        var command = new Nishe.RootCommand()
+        var command = new Nishe.RootCommand("Advanced command with conditional argument")
         {
             name,
             whitelister,
@@ -104,7 +104,7 @@ public class ConditionalTests
         var second = new ConditionalArgument<string>("second", v => v is "b1" or "b2", "b1");
         var name = new Option<string>("--name");
 
-        var command = new Nishe.RootCommand() { name, first, second, SkippingExperimentCommand.P1 };
+        var command = new Nishe.RootCommand("Two conditional arguments with options") { name, first, second, SkippingExperimentCommand.P1 };
 
         var parsed = command.Parse("--name x rest");
         parsed.GetValue(first).ShouldBe("a1");
@@ -144,7 +144,7 @@ public class ConditionalTests
         var runOption = new Option<string>("--opt");
         var runTarget = new Argument<string>("target") { Arity = ArgumentArity.ZeroOrOne };
 
-        var command = new Nishe.RootCommand()
+        var command = new Nishe.RootCommand("Default subcommand with options"   )
         {
             nameOption,
             whitelister,
@@ -171,7 +171,7 @@ public class ConditionalTests
     [DataRow("/?")]
     public void DefaultSubcommandIsNotAppliedForHelp(string helpOption)
     {
-        var command = new Nishe.RootCommand()
+        var command = new Nishe.RootCommand("Default subcommand with options")
         {
             new Command("run"),
             new Command("list")

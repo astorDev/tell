@@ -7,7 +7,7 @@ builder.Logging.AddNiceShell();
 
 var app = builder.Build();
 
-var rootCommand = new Nishe.RootCommand
+var rootCommand = new Nishe.RootCommand("Positional play commands")
 {
     WorkingDirectory.ConditionalArgument,
     TellFilename.Option

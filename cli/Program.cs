@@ -15,15 +15,18 @@ var app = builder.Build();
 
 return await app.RunCliAsync(async (RuleRunner runner) =>
 {
-    var root = new RootCommand("Executes commands defined in the Makefile")
+    var root = new Nishe.RootCommand("Executes commands defined in the Makefile")
     {
-        TellFileSystem.Symbols
+        WorkingDirectory.ConditionalArgument,
+        TellFilename.Option,
     };
 
     root.AddLoggingCliOptions();
 
     var initialParse = root.Parse(args);
-    var fileSystem = TellFileSystem.From(initialParse);
+    var workdir = initialParse.GetRequiredValue(WorkingDirectory.ConditionalArgument);
+    var filename = initialParse.GetRequiredValue(TellFilename.Option);
+    var fileSystem = TellFileSystem.From(workdir, filename);
 
     TellContext context;
 
@@ -50,6 +53,8 @@ return await app.RunCliAsync(async (RuleRunner runner) =>
         root.Add(ruleCommand);
     }
 
-    var parsed = root.ParseWithDefaultCommand(args, context.Makefile.FirstRule.Name);
+    root.SetDefaultSubcommand(context.Makefile.FirstRule.Name);
+
+    var parsed = root.Parse(args);
     return await parsed.InvokeAsync();
 });

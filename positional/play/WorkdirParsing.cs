@@ -16,7 +16,7 @@ public class FilesystemTests
     {
         var workDirArg = WorkingDirectory.ConditionalArgument;
 
-        var command = new Nishe.RootCommand()
+        var command = new Nishe.RootCommand("Filesystem tests")
         {
             workDirArg,
             TellFilename.Option

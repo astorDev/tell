@@ -1,6 +1,6 @@
 namespace Nishe;
 
-public partial class RootCommand : System.CommandLine.RootCommand
+public partial class RootCommand(string description) : System.CommandLine.RootCommand(description)
 {
     private readonly List<(int? Position, IArgsPreprocessor Preprocessor)> preprocessors = [];
 
