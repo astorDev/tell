@@ -1,3 +1,6 @@
+using Nishe;
+using Tell;
+
 namespace Playground;
 
 [TestClass]
@@ -17,7 +20,7 @@ public class ConditionalTests
             }
         };
 
-        var command = new RootCommand()
+        var command = new System.CommandLine.RootCommand()
         {
             customParsable,
             SkippingExperimentCommand.P1,
@@ -43,7 +46,7 @@ public class ConditionalTests
     public void AdvancedCommand()
     {
         var conditional = AlphaBetaGamma.ConditionalArgument;
-        var command = new AdvancedRootCommand()
+        var command = new Nishe.RootCommand()
         {
             conditional,
             SkippingExperimentCommand.P1,
@@ -77,7 +80,7 @@ public class ConditionalTests
         var name = new Option<string>("--name");
         var flag = new Option<bool>("--flag");
 
-        var command = new AdvancedRootCommand()
+        var command = new Nishe.RootCommand()
         {
             name,
             whitelister,
@@ -101,7 +104,7 @@ public class ConditionalTests
         var second = new ConditionalArgument<string>("second", v => v is "b1" or "b2", "b1");
         var name = new Option<string>("--name");
 
-        var command = new AdvancedRootCommand() { name, first, second, SkippingExperimentCommand.P1 };
+        var command = new Nishe.RootCommand() { name, first, second, SkippingExperimentCommand.P1 };
 
         var parsed = command.Parse("--name x rest");
         parsed.GetValue(first).ShouldBe("a1");
@@ -141,13 +144,14 @@ public class ConditionalTests
         var runOption = new Option<string>("--opt");
         var runTarget = new Argument<string>("target") { Arity = ArgumentArity.ZeroOrOne };
 
-        var command = new AdvancedRootCommand()
+        var command = new Nishe.RootCommand()
         {
             nameOption,
             whitelister,
-            new DefaultSubcommand("run") { runOption, runTarget },
+            new Command("run") { runOption, runTarget },
             new Command("list")
         };
+        command.SetDefaultSubcommand("run");
 
         var parsed = command.Parse(args);
 

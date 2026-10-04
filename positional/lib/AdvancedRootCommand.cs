@@ -1,8 +1,6 @@
-using System.CommandLine.Parsing;
+namespace Nishe;
 
-namespace Playground;
-
-public class AdvancedRootCommand : RootCommand
+public partial class RootCommand : System.CommandLine.RootCommand
 {
     private readonly List<(int? Position, IArgsPreprocessor Preprocessor)> preprocessors = [];
 
@@ -16,14 +14,10 @@ public class AdvancedRootCommand : RootCommand
         base.Add(argument);
     }
 
-    public new void Add(Command command)
+    public void SetDefaultSubcommand(string name)
     {
-        if (command is IArgsPreprocessor preprocessor)
-        {
-            preprocessors.Add((null, preprocessor));
-        }
-
-        base.Add(command);
+        preprocessors.RemoveAll(p => p.Position is null);
+        preprocessors.Add((null, new DefaultSubcommandInjector(this, name)));
     }
 
     public string[] Preprocess(string[] args)
@@ -32,7 +26,7 @@ public class AdvancedRootCommand : RootCommand
 
         var entries = Tokenize(args);
 
-        foreach (var (position, preprocessor) in preprocessors)
+        foreach (var (position, preprocessor) in preprocessors.OrderBy(p => p.Position is null))
         {
             var positionals = entries
                 .Select((entry, index) => (entry, index))
@@ -126,19 +120,24 @@ public class ConditionalArgument<T>(string name, Func<T, bool> condition, string
     }
 }
 
-public class DefaultSubcommand(string name, string? description = null) : Command(name, description), IArgsPreprocessor
-{
-    public string? GetArgumentToInject(string? candidateArg)
-    {
-        var isSiblingSubcommand = candidateArg is not null && Parents
-            .OfType<Command>()
-            .Any(parent => parent.Subcommands.Any(s => s.Name == candidateArg || s.Aliases.Contains(candidateArg)));
-
-        return isSiblingSubcommand ? null : Name;
-    }
-}
-
 public interface IArgsPreprocessor
 {
     public string? GetArgumentToInject(string? candidateArg);
+}
+
+public class DefaultSubcommandInjector(RootCommand root, string name) : IArgsPreprocessor
+{
+    public string? GetArgumentToInject(string? candidateArg)
+    {
+        var subcommands = root.Subcommands;
+        if (!subcommands.Any(s => s.Name == name))
+        {
+            throw new InvalidOperationException($"Default subcommand '{name}' is not added to the command.");
+        }
+
+        var isSubcommand = candidateArg is not null
+            && subcommands.Any(s => s.Name == candidateArg || s.Aliases.Contains(candidateArg));
+
+        return isSubcommand ? null : name;
+    }
 }
