@@ -24,10 +24,17 @@ public partial class RootCommand : System.CommandLine.RootCommand
     {
         if (preprocessors.Count == 0) return args;
 
+        var helpAliases = Options
+            .OfType<System.CommandLine.Help.HelpOption>()
+            .SelectMany(option => option.Aliases.Append(option.Name))
+            .ToHashSet(StringComparer.Ordinal);
+        var helpRequested = args.Any(helpAliases.Contains);
         var entries = Tokenize(args);
 
         foreach (var (position, preprocessor) in preprocessors.OrderBy(p => p.Position is null))
         {
+            if (position is null && helpRequested) continue;
+
             var positionals = entries
                 .Select((entry, index) => (entry, index))
                 .Where(x => x.entry.IsPositional)

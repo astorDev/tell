@@ -5,3 +5,6 @@ REPEAT ?= $(GREETING), $(NAME)!$(AFTER)
 greet:
 	echo "$(GREETING), $(NAME)!$(AFTER)"
 	echo "Again: $(REPEAT)"
+
+farewell:
+	echo "Goodbye, $(NAME)!"

@@ -162,4 +162,24 @@ public class ConditionalTests
         parsed.GetValue(runOption).ShouldBe(opt);
         parsed.GetValue(runTarget).ShouldBe(target);
     }
+
+    [TestMethod]
+    [DataRow("--help")]
+    [DataRow("-h")]
+    [DataRow("-?")]
+    [DataRow("/h")]
+    [DataRow("/?")]
+    public void DefaultSubcommandIsNotAppliedForHelp(string helpOption)
+    {
+        var command = new Nishe.RootCommand()
+        {
+            new Command("run"),
+            new Command("list")
+        };
+        command.SetDefaultSubcommand("run");
+
+        var parsed = command.Parse(helpOption);
+
+        parsed.CommandResult.Command.ShouldBe(command);
+    }
 }
