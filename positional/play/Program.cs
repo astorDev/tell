@@ -7,21 +7,27 @@ builder.Logging.AddNiceShell();
 
 var app = builder.Build();
 
-var rootCommand = new RootCommand()
+var rootCommand = new Nishe.RootCommand("Positional play commands")
 {
-    TellFileSystem.Symbols
+    WorkingDirectory.ConditionalArgument,
+    TellFilename.Option
 };
 
 var initialParseResult = rootCommand.Parse(args);
-var tellFiles = TellFileSystem.From(initialParseResult);
-var tellContext = tellFiles.ToContext();
+var workdir = initialParseResult.GetRequiredValue(WorkingDirectory.ConditionalArgument);
+var filename = initialParseResult.GetRequiredValue(TellFilename.Option);
 
-foreach (var rule in tellContext.Makefile.Rules.Values)
+var filesystem = TellFileSystem.From(workdir, filename);
+var context = filesystem.ToContext();
+
+foreach (var rule in context.Makefile.Rules.Values)
 {
-    var ruleCommand = new RuleInfoCommand(rule).MakeRuleCommand(rule, tellContext, Console.WriteLine);
+    var ruleCommand = new RuleInfoCommand(rule).MakeRuleCommand(rule, context, Console.WriteLine);
     rootCommand.Add(ruleCommand);
 }
 
-var parsed = rootCommand.ParseWithDefaultCommand(args, tellContext.Makefile.FirstRule.Name);
+rootCommand.SetDefaultSubcommand(context.Makefile.FirstRule.Name);
+
+var parsed = rootCommand.Parse(args);
 
 await parsed.InvokeAsync();

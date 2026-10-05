@@ -19,13 +19,16 @@ public class TellRun
 
         var app = builder.Build();
 
-        var rootCommand = new RootCommand("Tell Run in Tests")
+        var rootCommand = new Nishe.RootCommand("Tell Run in Tests")
         {
-            TellFileSystem.Symbols
+            WorkingDirectory.ConditionalArgument,
+            TellFilename.Option
         };
 
         var initialParseResult = rootCommand.Parse(args);
-        var tellFiles = TellFileSystem.From(initialParseResult);
+        var workdir = initialParseResult.GetRequiredValue(WorkingDirectory.ConditionalArgument);
+        var filename = initialParseResult.GetRequiredValue(TellFilename.Option);
+        var tellFiles = TellFileSystem.From(workdir, filename);
         var tellContext = tellFiles.ToContext();
 
         foreach (var rule in tellContext.Makefile.Rules.Values)
@@ -40,9 +43,11 @@ public class TellRun
             rootCommand.Add(ruleCommand);
         }
 
+        rootCommand.SetDefaultSubcommand(tellContext.Makefile.FirstRule.Name);
+
         Console.WriteLine($"Initial parse result unmatched tokens: {String.Join(", ", initialParseResult.UnmatchedTokens)}");
 
-        var parsed = rootCommand.ParseWithDefaultCommand(args, tellContext.Makefile.FirstRule.Name);
+        var parsed = rootCommand.Parse(args);
 
         parsed.Invoke();
 
