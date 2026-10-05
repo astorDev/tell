@@ -4,15 +4,23 @@ public class DefaultSubcommandInjector(RootCommand root, string name) : IArgsPre
 {
     public string? GetArgumentToInject(string? candidateArg)
     {
-        var subcommands = root.Subcommands;
-        if (!subcommands.Any(s => s.Name == name))
-        {
+        EnsureDefaultSubcommandExists();
+        return IsSubcommand(candidateArg) ? null : name;
+    }
+
+    public void EnsureDefaultSubcommandExists()
+    {
+        if (!root.Subcommands.Any(command => command.Name == name))
             throw new InvalidOperationException($"Default subcommand '{name}' is not added to the command.");
-        }
+    }
 
-        var isSubcommand = candidateArg is not null
-            && subcommands.Any(s => s.Name == candidateArg || s.Aliases.Contains(candidateArg));
+    public bool IsSubcommand(string? candidateArg) =>
+        candidateArg is not null && HasSubcommand(candidateArg);
 
-        return isSubcommand ? null : name;
+    public bool HasSubcommand(string candidateArg)
+    {
+        foreach (var command in root.Subcommands)
+            if (command.IsSubcommand(candidateArg)) return true;
+        return false;
     }
 }

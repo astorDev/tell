@@ -1,107 +1,29 @@
 namespace Nishe;
 
-public partial class RootCommand(string description) : System.CommandLine.RootCommand(description)
+public partial class RootCommand : System.CommandLine.RootCommand
 {
-    private readonly List<(int? Position, IArgsPreprocessor Preprocessor)> preprocessors = [];
+    private readonly ArgsPreprocessing argsPreprocessor;
+
+    public RootCommand(string description) : base(description)
+    {
+        argsPreprocessor = new ArgsPreprocessing(this);
+    }
 
     public new void Add(Argument argument)
     {
-        if (argument is IArgsPreprocessor preprocessor)
-        {
-            preprocessors.Add((Arguments.Count, preprocessor));
-        }
-
+        argsPreprocessor.Add(argument);
         base.Add(argument);
     }
 
-    public void SetDefaultSubcommand(string name)
-    {
-        preprocessors.RemoveAll(p => p.Position is null);
-        preprocessors.Add((null, new DefaultSubcommandInjector(this, name)));
-    }
+    public void SetDefaultSubcommand(string name) => argsPreprocessor.SetDefaultSubcommand(name);
 
-    public string[] Preprocess(string[] args)
-    {
-        if (preprocessors.Count == 0) return args;
-
-        var helpAliases = Options
-            .OfType<System.CommandLine.Help.HelpOption>()
-            .SelectMany(option => option.Aliases.Append(option.Name))
-            .ToHashSet(StringComparer.Ordinal);
-        var helpRequested = args.Any(helpAliases.Contains);
-        var entries = Tokenize(args);
-
-        foreach (var (position, preprocessor) in preprocessors.OrderBy(p => p.Position is null))
-        {
-            if (position is null && helpRequested) continue;
-
-            var positionals = entries
-                .Select((entry, index) => (entry, index))
-                .Where(x => x.entry.IsPositional)
-                .Select(x => x.index)
-                .ToList();
-
-            var candidateIndex = FindCandidateIndex(entries, positionals, position ?? Arguments.Count, position is null);
-            var candidate = candidateIndex >= 0 ? entries[candidateIndex].Value : null;
-            var argumentToInject = preprocessor.GetArgumentToInject(candidate);
-            if (argumentToInject is null) continue;
-
-            var insertIndex = candidateIndex >= 0 ? candidateIndex
-                : position is null ? entries.FindLastIndex(e => e.IsRootOwned) + 1
-                : positionals.Count > 0 ? positionals[^1] + 1
-                : entries.FindIndex(e => e.Type != TokenType.Directive) is var first and >= 0 ? first : entries.Count;
-
-            var isArgument = position is not null;
-            entries.Insert(insertIndex, new Entry(argumentToInject, isArgument ? TokenType.Argument : TokenType.Command, isArgument, isArgument));
-        }
-
-        return entries.Select(e => e.Value).ToArray();
-    }
-
-    private static int FindCandidateIndex(List<Entry> entries, List<int> positionals, int position, bool isSubcommand)
-    {
-        if (isSubcommand)
-        {
-            var subcommandIndex = entries.FindIndex(e => e.Type == TokenType.Command);
-            if (subcommandIndex >= 0) return subcommandIndex;
-        }
-
-        return position < positionals.Count ? positionals[position] : -1;
-    }
-
-    private List<Entry> Tokenize(string[] args)
-    {
-        var parsed = base.Parse(args);
-
-        var optionTokens = parsed.RootCommandResult.Children
-            .OfType<OptionResult>()
-            .SelectMany(o => o.Tokens)
-            .ToHashSet();
-
-        var entries = new List<Entry>();
-        var positionalZone = true;
-        var afterDoubleDash = false;
-        foreach (var token in parsed.Tokens)
-        {
-            var isArgument = token.Type == TokenType.Argument && !optionTokens.Contains(token);
-
-            var isUnknownOption = isArgument && !afterDoubleDash && token.Value.Length > 1 && token.Value.StartsWith('-');
-
-            positionalZone &= token.Type != TokenType.Command && !isUnknownOption;
-            afterDoubleDash |= token.Type == TokenType.DoubleDash;
-
-            entries.Add(new Entry(token.Value, token.Type, positionalZone && isArgument, positionalZone));
-        }
-
-        return entries;
-    }
-
-    private record Entry(string Value, TokenType Type, bool IsPositional, bool IsRootOwned);
+    public string[] Preprocess(string[] args) => argsPreprocessor.Preprocess(args);
 
     public ParseResult Parse(string args)
     {
         var splitArgs = CommandLineParser.SplitCommandLine(args);
-        return Parse(splitArgs.ToArray());
+        var parsedArgs = splitArgs.ToArray();
+        return Parse(parsedArgs);
     }
 
     public ParseResult Parse(string[] args)
