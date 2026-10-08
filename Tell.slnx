@@ -4,6 +4,8 @@
     <Project Path="make/article/play/Tell.Inspirations.Makefile.Playground.csproj" />
     <Project Path="positional/lib/Tell.Positional.csproj" />
     <Project Path="positional/play/Tell.Positional.Playground.csproj" />
+    <Project Path="small/fallback/lib/Tell.Fallback.csproj" />
+    <Project Path="small/fallback/play/Tell.Fallback.Playground.csproj" />
     <Project Path="superpower/lib/Tell.Superpower.csproj" />
     <Project Path="superpower/play/Tell.Superpower.Playground.csproj" />
     <Project Path="cli/Tell.Cli.csproj" />
