@@ -26,16 +26,14 @@ if (!Makefile.TryParse(fileSystem.File, out var makefile, out var error))
 {
     app.Logger.LogWarning("Failed to parse Makefile: {error}. Trying fallback to make", error!.Message);
 
-    var fallbackParams = new MakeFallbackParams(
-        fileSystem.WorkingDir.Path,
-        null,
-        filename
-    );
+    var fallback = new FallbackCli(fileSystem, app.Logger);
 
-    app.Logger.LogTrace("Fallback params: {params}", fallbackParams);
-    app.Logger.LogDebug("Attempting to fallback to make with arguments: {args}", fallbackParams.ToMakeArguments());
+    root.Add(FallbackCli.TargetArgument);
+    root.TreatUnmatchedTokensAsErrors = false;
+    root.SetAction(fallback.Action);
 
-    throw new NotImplementedException("Fallback to make is not implemented yet.");
+    var fallbackParse = root.Parse(args);
+    return await fallbackParse.InvokeAsync();
 }
 
 var context = new TellContext(fileSystem.WorkingDir, makefile!);

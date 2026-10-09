@@ -3,6 +3,9 @@ ARGS ?= . --file=fail.Makefile meet --verbose
 run:
 	dotnet run -- $(ARGS)
 
+unsupported:
+	make run ARGS=". --file=fail.Makefile meet Egor --verbose"
+
 apply-v:
 	cp Versions/$(V)/Program.cs Program.cs
 
