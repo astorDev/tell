@@ -23,6 +23,22 @@ public record Makefile(
         return doc;
     }
 
+    public static bool TryParse(Copaster.File file, out Makefile? makefile, out ParseException? error)
+    {
+        if (!file.Exists) throw new FileNotFoundException($"Makefile not found at `{file}`.");
+        var result = Parser.TryParse(file.Content);
+        if (result.HasValue)
+        {
+            makefile = result.Value;
+            error = null;
+            return true;
+        }
+        
+        makefile = null;
+        error = new ParseException(result.ToString(), result.ErrorPosition);
+        return false;
+    }
+
     public static Makefile From(IReadOnlyList<DocFragment> fragments)
     {
         var rules = fragments

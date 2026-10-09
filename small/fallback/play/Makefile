@@ -1,4 +1,4 @@
-ARGS ?= run . --name John
+ARGS ?= . --file=fail.Makefile meet --verbose
 
 run:
 	dotnet run -- $(ARGS)
