@@ -27,7 +27,7 @@ var filename = initialParse.GetRequiredValue(TellFilename.Option);
 
 var folder = new Folder(".");
 var fs = TellFileSystem.From(folder, filename);
-var makefile = MakefileTree.Load(fs.File.Path).ToMakefile();
+var makefile = Makefile.From(fs.File);
 
 foreach (var rule in makefile.Rules.Values)
 {

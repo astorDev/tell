@@ -18,7 +18,7 @@ var workdir = initialParseResult.GetRequiredValue(WorkingDirectoryCli.Conditiona
 var filename = initialParseResult.GetRequiredValue(TellFilename.Option);
 
 var filesystem = TellFileSystem.From(workdir, filename);
-var makefile = MakefileTree.Load(filesystem.File.Path).ToMakefile();
+var makefile = Makefile.From(filesystem.File);
 
 foreach (var rule in makefile.Rules.Values)
 {
