@@ -23,6 +23,21 @@ public class RecipeRunner(ILogger<RecipeRunner> logger)
         Console.Write(SelectGraphicRendition.NormalIntensity);
         return result;
     }
+
+    public async Task<Process> Run(string recipeCommand, string workingDirectory)
+    {
+        logger.LogDebug("Running in `{WorkingDirectory}`:", workingDirectory);
+        logger.LogInformation("{EffectiveRecipe}", recipeCommand);
+
+        var startInfo = Shell.Sh.ProxyProcessStartInfo(recipeCommand);
+        startInfo.WorkingDirectory = workingDirectory;
+        
+        Console.Write(SelectGraphicRendition.Dim);
+        var result = await startInfo.Run();
+        Console.Write(SelectGraphicRendition.NormalIntensity);
+
+        return result;
+    }
 }
 
 public static class RecipeRunnerExtensions

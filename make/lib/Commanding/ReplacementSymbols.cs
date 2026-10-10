@@ -41,9 +41,9 @@ public record ReplacementSymbols(Option<Replacement> Option, Argument<Replacemen
         command.Add(Argument);
     }
 
-    public static IReadOnlyList<ReplacementSymbols> AllFor(Rule rule, IReadOnlyDictionary<string, Assignment> assignments)
+    public static IReadOnlyList<ReplacementSymbols> AllFor(Makefile makefile, Rule rule)
     {
-        var settings = ReplacementSettings.AllFor(rule, assignments);
+        var settings = ReplacementSettings.AllFor(makefile, rule);
         return settings.Select(From).ToArray();
     }
 }

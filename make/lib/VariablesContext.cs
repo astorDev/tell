@@ -15,13 +15,11 @@ public static class VariablesContextExtensions
 {
     public static VariablesContext ToVariablesContext(this RuleCommandBuildingParams parameters)
     {
-        var varUseParams = VarUseCommandParams.From(parameters.Rule.Placeholders);
+        var placeholders = RuleDependencyTraversal.Ordered(parameters.Doc, parameters.Rule)
+            .SelectMany(rule => rule.Placeholders)
+            .DistinctBy(placeholder => placeholder.Identifier.Value);
+            
+        var varUseParams = VarUseCommandParams.From(placeholders);
         return new(varUseParams, parameters.Doc.Assignments);
-    }
-
-    public static Task Run(this RuleRunner runner, IEnumerable<Recipe> recipes, string workingDirectory, VariablesContext variablesContext, ParseResult parseResult)
-    {
-        var variables = variablesContext.GetFinalVariables(parseResult);
-        return runner.Run(recipes, workingDirectory, variables);
     }
 }

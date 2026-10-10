@@ -1,23 +1,41 @@
 global using Tell;
 global using Superpower;
 global using Microsoft.Extensions.DependencyInjection;
+using Copaster;
+using Hesive;
+using Microsoft.Extensions.Logging;
 
-var builder = new CliBuilder();
+var builder = new AppBuilder();
 
+builder.Logging.SetMinimumLevel(LogLevel.Trace);
 builder.Logging.AddNiceShell();
 
-builder.Services.AddSingleton<Startup>();
 builder.Services.AddSingleton<RuleRunner>();
 builder.Services.AddSingleton<RecipeRunner>();
 
-using var app = builder.Build("A tell.doc.runner CLI application.");
+var app = builder.Build();
 
-var startup = app.Services.GetRequiredService<Startup>();
 var runner = app.Services.GetRequiredService<RuleRunner>();
 
-var runParseResult = startup.Parse(args);
-var runParams = startup.Interpret(runParseResult);
+var root = new RootCommand()
+{
+    TellFilename.Option
+};
 
-var runCommand = new RunRuleCommand(runParams, runner);
-var ruleCommandParseResult = runCommand.Parse(runParams.Args);
-await ruleCommandParseResult.InvokeAsync();
+var initialParse = root.Parse(args);
+var filename = initialParse.GetRequiredValue(TellFilename.Option);
+
+var folder = new Folder(".");
+var fs = TellFileSystem.From(folder, filename);
+var context = fs.ToContext();
+
+foreach (var rule in context.Makefile.Rules.Values)
+{
+    var ruleCommand = new RuleInfoCommand(rule);
+
+    ruleCommand.MakeRuleCommand(rule, context, runner.Run);
+
+    root.Add(ruleCommand);
+}
+
+return await root.Parse(args).InvokeAsync();

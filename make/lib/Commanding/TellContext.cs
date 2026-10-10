@@ -1,3 +1,5 @@
+using Copaster;
+
 namespace Tell;
 
 public record TellContext(Folder WorkingDirectory, Makefile Makefile);

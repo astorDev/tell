@@ -15,7 +15,8 @@ GREETING ?= Servus
             from a in Assignment.Parser.Many()
             select a;
 
-        var assignments = parser.Parse(makefile);
+        var assignments = parser.Parse(makefile)
+            .ToDictionary(assignment => assignment.Target.Value);
 
         var existingVariables = new Dictionary<string, string>();
 

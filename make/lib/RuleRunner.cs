@@ -15,11 +15,17 @@ public class RuleRunner(RecipeRunner recipeRunner)
 
     public async Task Run(RuleRunParams parameters)
     {
-        await Run(parameters.Rule.Recipes, parameters.WorkingDirectory.FullPath, parameters.Replacements);
+        var commandsToRun = RecipeCommands.From(parameters.Makefile, parameters.Rule, parameters.Replacements);
+        foreach (var command in commandsToRun)
+        {
+            using var process = await recipeRunner.Run(command, parameters.WorkingDirectory.FullPath);
+            if (process.ExitCode != 0) throw new Exception($"Command failed with exit code {process.ExitCode}: {command}");
+        }
     }
 }
 
 public record RuleRunParams(
+    Makefile Makefile,
     Rule Rule,
     Folder WorkingDirectory,
     IReadOnlyDictionary<string, string> Replacements

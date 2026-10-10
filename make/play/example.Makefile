@@ -14,3 +14,11 @@ path:
 nano:
 	nano example.Makefile
 
+dependent: prepare compile
+	echo "dependency demo complete"
+
+prepare:
+	echo "prepare $(PREPARE)"
+
+compile:
+	echo "compile $(COMPILE)"
