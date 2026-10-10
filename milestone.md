@@ -1,0 +1,22 @@
+# Tell Milestone 1
+
+- [ ] Core Functionality
+  - [x] Basic Rules Execution
+  - [x] Positional Arguments
+  - [ ] Dependencies (`target: dep1 dep2`) Support
+  - [ ] Documentation
+- [ ] Unsupported Make Functionality Handling
+  - [x] Fallback to make
+  - [ ] Test for every unsupported makefile syntax
+  - [ ] Documentation
+- [ ] Installation
+  - [x] `dotnet tool install`
+    - [x] Support
+    - [x] Documentation
+  - [ ] .NET-Independent Installation
+    - [ ] Pick supported tools
+    - [ ] Documentation
+- [ ] AI-Friendliness
+  - [ ] Instructions and skills for AI to know how to work with tell
+- [ ] Pollishing
+  - [ ] Comprehensive README.md
