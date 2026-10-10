@@ -19,10 +19,10 @@ public static class FallbackCli
         var variableOptions = MakeVariableOptionCollection.From(parseResult.UnmatchedTokens);
         var variableArgs = variableOptions.ToMakeArguments().ToArray();
 
-        var filePath = Path.GetRelativePath(fileSystem.WorkingDir.Path, fileSystem.File.Path);
+        var filePath = fileSystem.File.PathRelativeTo(fileSystem.WorkingDir);
 
         return new (
-            fileSystem.WorkingDir.Path, 
+            fileSystem.WorkingDir.Path,
             filePath,
             targetName, 
             variableArgs
