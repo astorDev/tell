@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Tell;
 
-public class FallbackCli(TellFileSystem fileSystem, ILogger logger)
+public static class FallbackCli
 {
     public static readonly Argument<string> TargetArgument = new("target")
     {
@@ -11,24 +11,26 @@ public class FallbackCli(TellFileSystem fileSystem, ILogger logger)
         Description = "The target to execute."
     };
 
-    public MakeFallback CreateFallbackFrom(ParseResult parseResult)
+    public static MakeFallback CreateFallbackFrom(ParseResult parseResult, TellFileSystem fileSystem)
     {
         var targetName = parseResult.GetValue(TargetArgument);
 
         var variableOptions = MakeVariableOptionCollection.From(parseResult.UnmatchedTokens);
         var variableArgs = variableOptions.ToMakeArguments().ToArray();
 
+        var filePath = fileSystem.File.GetRelativePath(fileSystem.WorkingDir);
+
         return new (
             fileSystem.WorkingDir.Path, 
-            fileSystem.File.Path, 
+            filePath,
             targetName, 
             variableArgs
         );
     }
 
-    public async Task<int> Action(ParseResult parseResult)
+    public static async Task<int> Action(ParseResult parseResult, TellFileSystem fileSystem, ILogger logger)
     {
-        var fallback = CreateFallbackFrom(parseResult);
+        var fallback = CreateFallbackFrom(parseResult, fileSystem);
 
         return await fallback.Execute(logger);
     }

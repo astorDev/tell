@@ -1,4 +1,5 @@
 using Tell;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Playground;
 
@@ -25,5 +26,32 @@ public class FallbackTests
     {
         var fallback = new MakeFallback("work dir", "make file", "meet", ["--jobs=2", "NAME=Egor Tarasov"]);
         fallback.GetMakeArguments().ShouldBe(new[] { "-C work dir", "-f make file", "meet", "--jobs=2", "NAME=Egor Tarasov" });
+    }
+
+    [DataTestMethod]
+    [DataRow("cli/examples --file deps.Makefile meet --name=Egor", "-C cli/examples -f deps.Makefile meet NAME=Egor")]
+    public void CreatesFallbackArgumentsFromCommandLine(string original, string fallback)
+    {
+        var root = new RootCommand { 
+            WorkingDirectory.ConditionalArgument, 
+            TellFilename.Option
+        };
+
+        var initialParse = root.Parse(original);
+        var fileSystem = TellFileSystem.UncheckedFrom(initialParse);
+
+        root.Add(FallbackCli.TargetArgument);
+        root.TreatUnmatchedTokensAsErrors = false;
+        var fallbackParse = root.Parse(original);
+
+        var fb = FallbackCli.CreateFallbackFrom(fallbackParse, fileSystem);
+        fb.ToMakeArguments().ShouldBe(fallback);
+    }
+
+    [TestMethod]
+    public void PreservesFilenamePassedToMakeFallback()
+    {
+        var fallback = new MakeFallback(null, "config/deps.Makefile", "meet");
+        fallback.GetMakeArguments().ShouldContain("-f config/deps.Makefile");
     }
 }

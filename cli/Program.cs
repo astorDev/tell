@@ -32,11 +32,9 @@ return await app.RunCliAsync(async (RuleRunner runner) =>
     {
         app.Logger.LogWarning("Failed to parse Makefile: {error}. Trying fallback to make", error!.Message);
 
-        var fallback = new FallbackCli(fileSystem, app.Logger);
-
         root.Add(FallbackCli.TargetArgument);
         root.TreatUnmatchedTokensAsErrors = false;
-        root.SetAction(fallback.Action);
+        root.SetAction(pr => FallbackCli.Action(pr, fileSystem, app.Logger));
 
         var fallbackParse = root.Parse(args);
         return await fallbackParse.InvokeAsync();

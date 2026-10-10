@@ -2,7 +2,7 @@
 
 - [x] Initial Support: Only Working Directory, Filename, Target allowed
 - [x] Allow named options e.g. `--name Bob` -> `NAME=Bob`
-- [ ] 🪲 Fix filename incorrect resolution. [Details](#filename-resolves-incorrectly-when-context-provided)
+- [x] 🪲 Fix filename incorrect resolution. [Details](#filename-resolves-incorrectly-when-context-provided)
 
 ## Filename resolves incorrectly when context provided
 
