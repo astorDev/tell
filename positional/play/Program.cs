@@ -9,12 +9,12 @@ var app = builder.Build();
 
 var rootCommand = new Nishe.RootCommand("Positional play commands")
 {
-    WorkingDirectory.ConditionalArgument,
+    WorkingDirectoryCli.CreateConditionalArgument,
     TellFilename.Option
 };
 
 var initialParseResult = rootCommand.Parse(args);
-var workdir = initialParseResult.GetRequiredValue(WorkingDirectory.ConditionalArgument);
+var workdir = initialParseResult.GetRequiredValue(WorkingDirectoryCli.CreateConditionalArgument);
 var filename = initialParseResult.GetRequiredValue(TellFilename.Option);
 
 var filesystem = TellFileSystem.From(workdir, filename);

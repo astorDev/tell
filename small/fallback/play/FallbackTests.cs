@@ -1,5 +1,6 @@
+using Microsoft.Extensions.Logging;
+using Nishe;
 using Tell;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Playground;
 
@@ -12,7 +13,7 @@ public class FallbackTests
     public void ConvertsUnknownNamedArgumentsToMakeAssignments(string commandLine, string assignment)
     {
         var target = new Argument<string>("target") { Arity = ArgumentArity.ZeroOrOne };
-        var command = new RootCommand { target, new Option<bool>("--verbose") };
+        var command = new Nishe.RootCommand("FallbackTest -> ConvertsUnknownNamedArgumentsToMakeAssignments") { target, new Option<bool>("--verbose") };
         command.TreatUnmatchedTokensAsErrors = false;
         var parsed = command.Parse(commandLine);
         parsed.GetValue(target).ShouldBe("meet");
@@ -30,10 +31,12 @@ public class FallbackTests
 
     [DataTestMethod]
     [DataRow("cli/examples --file deps.Makefile meet --name=Egor", "-C cli/examples -f deps.Makefile meet NAME=Egor")]
+    [DataRow("cli --file examples/deps.Makefile meet --name=Egor", "-C cli -f examples/deps.Makefile meet NAME=Egor")]
+    [DataRow("--file cli/examples/deps.Makefile meet --name=Egor", "-C . -f cli/examples/deps.Makefile meet NAME=Egor")]
     public void CreatesFallbackArgumentsFromCommandLine(string original, string fallback)
     {
-        var root = new RootCommand { 
-            WorkingDirectory.ConditionalArgument, 
+        var root = new Nishe.RootCommand("FallbackTest -> CreatesFallbackArgumentsFromCommandLine") { 
+            WorkingDirectoryCli.CreateConditionalArgument(folder => folder.Path.Contains("cli")),
             TellFilename.Option
         };
 
@@ -42,9 +45,10 @@ public class FallbackTests
 
         root.Add(FallbackCli.TargetArgument);
         root.TreatUnmatchedTokensAsErrors = false;
+
         var fallbackParse = root.Parse(original);
 
-        var fb = FallbackCli.CreateFallbackFrom(fallbackParse, fileSystem);
+        var fb = FallbackCli.CreateFallbackFrom(fallbackParse, fileSystem, TestLogger.Instance);
         fb.ToMakeArguments().ShouldBe(fallback);
     }
 
@@ -54,4 +58,23 @@ public class FallbackTests
         var fallback = new MakeFallback(null, "config/deps.Makefile", "meet");
         fallback.GetMakeArguments().ShouldContain("-f config/deps.Makefile");
     }
+}
+
+public class LambdaLogger(Action<string> write, LogLevel minimumLevel = LogLevel.Trace) : ILogger
+{
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+    public bool IsEnabled(LogLevel logLevel) => logLevel >= minimumLevel;
+
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+    {
+        if (!IsEnabled(logLevel)) return;
+        var message = formatter(state, exception);
+        write($"{logLevel}: {message}");
+    }
+}
+
+public class TestLogger
+{
+    public static readonly ILogger Instance = new LambdaLogger(Console.WriteLine);
 }

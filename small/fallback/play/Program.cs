@@ -11,14 +11,14 @@ var app = builder.Build();
 
 var root = new Nishe.RootCommand("Executes commands defined in the Makefile")
 {
-    WorkingDirectory.ConditionalArgument,
+    WorkingDirectoryCli.ConditionalArgument,
     TellFilename.Option,
 };
 
 root.AddLoggingCliOptions();
 
 var initialParse = root.Parse(args);
-var workdir = initialParse.GetRequiredValue(WorkingDirectory.ConditionalArgument);
+var workdir = initialParse.GetRequiredValue(WorkingDirectoryCli.ConditionalArgument);
 var filename = initialParse.GetRequiredValue(TellFilename.Option);
 var fileSystem = TellFileSystem.From(workdir, filename);
 

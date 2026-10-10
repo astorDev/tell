@@ -19,7 +19,7 @@ public record TellFileSystem(Folder WorkingDir, Copaster.File File)
 
     public static TellFileSystem UncheckedFrom(ParseResult parsed)
     {
-        var folder = parsed.GetRequiredValue(WorkingDirectory.ConditionalArgument);
+        var folder = parsed.GetRequiredWorkingDirectory();
         var filename = parsed.GetRequiredValue(TellFilename.Option);
 
         return UncheckedFrom(folder, filename);

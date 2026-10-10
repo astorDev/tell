@@ -11,10 +11,11 @@ public static class FallbackCli
         Description = "The target to execute."
     };
 
-    public static MakeFallback CreateFallbackFrom(ParseResult parseResult, TellFileSystem fileSystem)
+    public static MakeFallback CreateFallbackFrom(ParseResult parseResult, TellFileSystem fileSystem, ILogger logger)
     {
         var targetName = parseResult.GetValue(TargetArgument);
 
+        logger.LogDebug("Creating MakeVariableOptionCollection from unmatched tokens: {UnmatchedTokens}", string.Join(";", parseResult.UnmatchedTokens));
         var variableOptions = MakeVariableOptionCollection.From(parseResult.UnmatchedTokens);
         var variableArgs = variableOptions.ToMakeArguments().ToArray();
 
@@ -30,7 +31,7 @@ public static class FallbackCli
 
     public static async Task<int> Action(ParseResult parseResult, TellFileSystem fileSystem, ILogger logger)
     {
-        var fallback = CreateFallbackFrom(parseResult, fileSystem);
+        var fallback = CreateFallbackFrom(parseResult, fileSystem, logger);
 
         return await fallback.Execute(logger);
     }
