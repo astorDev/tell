@@ -6,7 +6,8 @@ namespace Tell;
 public record MakeFallback( 
     string? WorkingDirectoryChange, 
     string? Filename,
-    string? RuleName
+    string? RuleName,
+    string[]? Arguments = null
 )
 {
     public string ToMakeArguments()
@@ -20,6 +21,7 @@ public record MakeFallback(
         if (WorkingDirectoryChange is not null) yield return $"-C {WorkingDirectoryChange}";
         if (Filename is not null) yield return $"-f {Filename}";
         if (RuleName is not null) yield return $"{RuleName}";
+        foreach (var argument in Arguments ?? []) yield return argument;
     }
 
     public async Task<int> Execute(ILogger logger)

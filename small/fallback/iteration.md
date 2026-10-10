@@ -1,4 +1,4 @@
 # Tell Fallback Module Current Iteration
 
 - [x] Initial Support: Only Working Directory, Filename, Target allowed
-- [ ] Allow named argument (using `--` syntax).
+- [x] Allow named options e.g. `--name Bob` -> `NAME=Bob`
