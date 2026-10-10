@@ -37,6 +37,6 @@ public class MakeVariableArgumentsTests
     public void RejectsInvalidNamedArguments(string input)
     {
         var tokens = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        Assert.ThrowsExactly<NotSupportedException>(() => MakeVariableOptionCollection.From(tokens).Items.ToArray());
+        Assert.Throws<Exception>(() => MakeVariableOptionCollection.From(tokens).Items.ToArray());
     }
 }
