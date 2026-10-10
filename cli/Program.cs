@@ -28,20 +28,21 @@ return await app.RunCliAsync(async (RuleRunner runner) =>
     var filename = initialParse.GetRequiredValue(TellFilename.Option);
     var fileSystem = TellFileSystem.From(workdir, filename);
 
-    TellContext context;
-
-    try
+    if (!Makefile.TryParse(fileSystem.File, out var makefile, out var error))
     {
-        context = fileSystem.ToContext();
-    }
-    catch (Superpower.ParseException ex)
-    {
-        app.Logger.LogWarning("Failed to parse Makefile: {Message}. Trying fallback to make", ex.Message);
+        app.Logger.LogWarning("Failed to parse Makefile: {error}. Trying fallback to make", error!.Message);
 
-        app.Logger.LogTrace("Fallback params: Folder: {Folder}, File: {File}", fileSystem.WorkingDir.Path, fileSystem.File.Path);
+        var fallback = new FallbackCli(fileSystem, app.Logger);
 
-        throw new NotImplementedException("Fallback to make is not implemented yet.");
+        root.Add(FallbackCli.TargetArgument);
+        root.TreatUnmatchedTokensAsErrors = false;
+        root.SetAction(fallback.Action);
+
+        var fallbackParse = root.Parse(args);
+        return await fallbackParse.InvokeAsync();
     }
+
+    var context = new TellContext(fileSystem.WorkingDir, makefile!);
 
     foreach (var rule in context.Makefile.Rules.Values)
     {

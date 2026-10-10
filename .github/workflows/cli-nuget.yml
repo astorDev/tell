@@ -4,6 +4,8 @@ on:
     paths:
       - 'cli/**'
       - 'make/lib/**'
+      - 'small/fallback/lib/**'
+      - 'positional/lib/**'
       - '.github/workflows/cli-nuget.yml'
   workflow_dispatch:
 

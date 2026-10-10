@@ -25,7 +25,7 @@ public class FallbackCli(TellFileSystem fileSystem, ILogger logger)
 
         var targetName = parseResult.GetValue(TargetArgument);
 
-        var fallbackParams = new MakeFallback(fileSystem.WorkingDir.Path, fileSystem.File.Name, targetName);
+        var fallbackParams = new MakeFallback(fileSystem.WorkingDir.Path, fileSystem.File.Path, targetName);
 
         return await fallbackParams.Execute(logger);
     }
