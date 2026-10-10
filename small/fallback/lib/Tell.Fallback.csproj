@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\positional\lib\Tell.Positional.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NiceShell.Logger" Version="2026.109.119.9" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Tell</RootNamespace>
+  </PropertyGroup>
+
+</Project>
