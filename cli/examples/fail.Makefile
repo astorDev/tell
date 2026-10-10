@@ -1,7 +1,9 @@
+NAME ?= World
+
 meet: hello bye
 
 hello:
-	echo "Hello, world!"
+	echo "Hello, $(NAME)!"
 
 bye:
-	echo "Goodbye, world!"
+	echo "Goodbye, $(NAME)!"
