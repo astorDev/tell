@@ -47,7 +47,7 @@ public class FallbackTests
         var parsed = root.Parse(original);
         var fileSystem = TellFileSystem.UncheckedFrom(parsed);
 
-        var actualFallback = FallbackCli.CreateFallbackFrom(parsed, fileSystem, TestLogger.Instance);
+        var actualFallback = FallbackCli.CreateFallbackFrom(parsed, fileSystem, TestLogger.Default);
         actualFallback.ToMakeArguments().ShouldBe(fallback);
     }
 
@@ -57,23 +57,4 @@ public class FallbackTests
         var fallback = new MakeFallback(null, "config/deps.Makefile", "meet");
         fallback.GetMakeArguments().ShouldContain("-f config/deps.Makefile");
     }
-}
-
-public class LambdaLogger(Action<string> write, LogLevel minimumLevel = LogLevel.Trace) : ILogger
-{
-    public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
-
-    public bool IsEnabled(LogLevel logLevel) => logLevel >= minimumLevel;
-
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
-    {
-        if (!IsEnabled(logLevel)) return;
-        var message = formatter(state, exception);
-        write($"{logLevel}: {message}");
-    }
-}
-
-public class TestLogger
-{
-    public static readonly ILogger Instance = new LambdaLogger(Console.WriteLine);
 }
