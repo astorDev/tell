@@ -21,12 +21,12 @@ public class TellRun
 
         var rootCommand = new Nishe.RootCommand("Tell Run in Tests")
         {
-            WorkingDirectory.ConditionalArgument,
+            WorkingDirectoryCli.CreateConditionalArgument,
             TellFilename.Option
         };
 
         var initialParseResult = rootCommand.Parse(args);
-        var workdir = initialParseResult.GetRequiredValue(WorkingDirectory.ConditionalArgument);
+        var workdir = initialParseResult.GetRequiredValue(WorkingDirectoryCli.CreateConditionalArgument);
         var filename = initialParseResult.GetRequiredValue(TellFilename.Option);
         var tellFiles = TellFileSystem.From(workdir, filename);
         var tellContext = tellFiles.ToContext();

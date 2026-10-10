@@ -4,13 +4,9 @@ public record MakeVariableOption(string Key, string Value)
 {
     public static Exception InvalidSyntaxException => new NotSupportedException("Fallback named arguments must use the form '--name value' or '--name=value'.");
 
-    public static MakeVariableOption From(string[] chunk)
+    public static MakeVariableOption From(string key, string value)
     {
-        if (chunk.Length != 2) throw InvalidSyntaxException;
-
-        (var key, var value) = (chunk[0], chunk[1]);
-
-        if (!ValidKey(key)) throw InvalidSyntaxException;
+        if (!ValidKey(key)) throw new ($"Variable key '{key}' is invalid.");
 
         return new MakeVariableOption(key, value);
     }
@@ -24,12 +20,16 @@ public record MakeVariableOption(string Key, string Value)
 
 public record MakeVariableOptionCollection(IReadOnlyList<MakeVariableOption> Items)
 {
-    public static MakeVariableOptionCollection From(IEnumerable<string> unmatchedTokens) => new(
-        unmatchedTokens.SelectMany(ExpandEquals)
-            .Chunk(2)
-            .Select(MakeVariableOption.From)
-            .ToArray()
-    );
+    public static MakeVariableOptionCollection From(IEnumerable<string> unmatchedTokens)
+    {
+        var chunks = unmatchedTokens.SelectMany(ExpandEquals).Chunk(2);
+        if (chunks.Any(chunk => chunk.Length != 2)) 
+            throw new NotSupportedException($"Unable to parse unmatched tokens ({string.Join(" ", unmatchedTokens)}) into pairs.");
+
+        var result = chunks.Select(chunk => MakeVariableOption.From(chunk[0], chunk[1]));
+
+        return new(result.ToArray());
+    }
 
     public static string[] ExpandEquals(string token)
     {

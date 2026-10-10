@@ -14,7 +14,7 @@ public class FilesystemTests
     [DataRow("--file CustomMakefile examples", "examples", "CustomMakefile")]
     public void OnEmpty(string input, string expectedFolder, string expectedFilename)
     {
-        var workDirArg = WorkingDirectory.ConditionalArgument;
+        var workDirArg = WorkingDirectoryCli.CreateConditionalArgument;
 
         var command = new Nishe.RootCommand("Filesystem tests")
         {
