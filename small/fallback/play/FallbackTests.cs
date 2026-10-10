@@ -35,21 +35,20 @@ public class FallbackTests
     [DataRow("--file cli/examples/deps.Makefile meet --name=Egor", "-C . -f cli/examples/deps.Makefile meet NAME=Egor")]
     public void CreatesFallbackArgumentsFromCommandLine(string original, string fallback)
     {
-        var root = new Nishe.RootCommand("FallbackTest -> CreatesFallbackArgumentsFromCommandLine") { 
+        var root = new Nishe.RootCommand("FallbackTest -> CreatesFallbackArgumentsFromCommandLine")
+        {
             WorkingDirectoryCli.CreateConditionalArgument(folder => folder.Path.Contains("cli")),
-            TellFilename.Option
+            TellFilename.Option,
+            FallbackCli.TargetArgument
         };
 
-        var initialParse = root.Parse(original);
-        var fileSystem = TellFileSystem.UncheckedFrom(initialParse);
-
-        root.Add(FallbackCli.TargetArgument);
         root.TreatUnmatchedTokensAsErrors = false;
 
-        var fallbackParse = root.Parse(original);
+        var parsed = root.Parse(original);
+        var fileSystem = TellFileSystem.UncheckedFrom(parsed);
 
-        var fb = FallbackCli.CreateFallbackFrom(fallbackParse, fileSystem, TestLogger.Instance);
-        fb.ToMakeArguments().ShouldBe(fallback);
+        var actualFallback = FallbackCli.CreateFallbackFrom(parsed, fileSystem, TestLogger.Instance);
+        actualFallback.ToMakeArguments().ShouldBe(fallback);
     }
 
     [TestMethod]
