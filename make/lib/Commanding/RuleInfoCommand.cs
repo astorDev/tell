@@ -16,6 +16,6 @@ public class RuleInfoCommand(Rule rule) : Command(NameFrom(rule), DescriptionFro
 
     public static string NameFrom(Rule rule)
     {
-        return rule.Target.Identifier.Value;
+        return rule.Name;
     }
 }

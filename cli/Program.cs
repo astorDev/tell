@@ -28,7 +28,7 @@ return await app.RunCliAsync(async (RuleRunner runner) =>
     var filename = initialParse.GetRequiredValue(TellFilename.Option);
     var fileSystem = TellFileSystem.From(workdir, filename);
 
-    if (!Makefile.TryParse(fileSystem.File, out var makefile, out var error))
+    if (!MakefileTree.TryParse(fileSystem.File, out var makefileTree, out var error))
     {
         app.Logger.LogWarning("Failed to parse Makefile: {error}. Trying fallback to make", error!.Message);
 
@@ -40,19 +40,19 @@ return await app.RunCliAsync(async (RuleRunner runner) =>
         return await fallbackParse.InvokeAsync();
     }
 
-    var context = new TellContext(fileSystem.WorkingDir, makefile!);
+    var makefile = makefileTree!.ToMakefile();
 
-    foreach (var rule in context.Makefile.Rules.Values)
+    foreach (var rule in makefile.Rules.Values)
     {
         var ruleCommand = new RuleInfoCommand(rule);
         ruleCommand.AddLoggingCliOptions();
 
-        ruleCommand.MakeRuleCommand(rule, context, runner.Run);
+        ruleCommand.MakeRuleCommand(rule, fileSystem.WorkingDir, runner.Run);
 
         root.Add(ruleCommand);
     }
 
-    root.SetDefaultSubcommand(context.Makefile.FirstRule.Name);
+    root.SetDefaultSubcommand(makefile.FirstRule.Name);
 
     var parsed = root.Parse(args);
     return await parsed.InvokeAsync();

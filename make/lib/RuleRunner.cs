@@ -15,7 +15,7 @@ public class RuleRunner(RecipeRunner recipeRunner)
 
     public async Task Run(RuleRunParams parameters)
     {
-        var commandsToRun = RecipeCommands.From(parameters.Makefile, parameters.Rule, parameters.Replacements);
+        var commandsToRun = RecipeCommands.From(parameters.Rule, parameters.Replacements);
         foreach (var command in commandsToRun)
         {
             using var process = await recipeRunner.Run(command, parameters.WorkingDirectory.FullPath);
@@ -25,7 +25,6 @@ public class RuleRunner(RecipeRunner recipeRunner)
 }
 
 public record RuleRunParams(
-    Makefile Makefile,
     Rule Rule,
     Folder WorkingDirectory,
     IReadOnlyDictionary<string, string> Replacements

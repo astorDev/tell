@@ -18,15 +18,15 @@ var workdir = initialParseResult.GetRequiredValue(WorkingDirectoryCli.Conditiona
 var filename = initialParseResult.GetRequiredValue(TellFilename.Option);
 
 var filesystem = TellFileSystem.From(workdir, filename);
-var context = filesystem.ToContext();
+var makefile = MakefileTree.Load(filesystem.File.Path).ToMakefile();
 
-foreach (var rule in context.Makefile.Rules.Values)
+foreach (var rule in makefile.Rules.Values)
 {
-    var ruleCommand = new RuleInfoCommand(rule).MakeRuleCommand(rule, context, Console.WriteLine);
+    var ruleCommand = new RuleInfoCommand(rule).MakeRuleCommand(rule, filesystem.WorkingDir, Console.WriteLine);
     rootCommand.Add(ruleCommand);
 }
 
-rootCommand.SetDefaultSubcommand(context.Makefile.FirstRule.Name);
+rootCommand.SetDefaultSubcommand(makefile.FirstRule.Name);
 
 var parsed = rootCommand.Parse(args);
 

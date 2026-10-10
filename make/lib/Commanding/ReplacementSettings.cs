@@ -6,11 +6,11 @@ public record ReplacementSettings(string OriginalIdentifier, string KebabedIdent
 {
     public static ReplacementSettings From(string originalIdentifier, RecipeFragment[] defaultValue) => new(originalIdentifier, Kebab.Of(originalIdentifier), defaultValue);
 
-    public static ReplacementSettings[] AllFor(Makefile makefile, Rule rule)
+    public static ReplacementSettings[] AllFor(Rule rule)
     {
-        var rules = RuleDependencyTraversal.Ordered(makefile, rule);
+        var rules = rule.RulesFromDependenciesAndBody;
         var placeholders = rules.SelectMany(dependency => dependency.Placeholders);
-        return AllFor(placeholders, makefile.Assignments);
+        return AllFor(placeholders, rule.Assignments);
     }
 
     public static ReplacementSettings[] AllFor(IEnumerable<Placeholder> placeholders, IReadOnlyDictionary<string, Assignment> assignments) =>

@@ -22,7 +22,7 @@ var workdir = initialParse.GetRequiredValue(WorkingDirectoryCli.ConditionalArgum
 var filename = initialParse.GetRequiredValue(TellFilename.Option);
 var fileSystem = TellFileSystem.From(workdir, filename);
 
-if (!Makefile.TryParse(fileSystem.File, out var makefile, out var error))
+if (!MakefileTree.TryParse(fileSystem.File, out var makefileTree, out var error))
 {
     app.Logger.LogWarning("Failed to parse Makefile: {error}. Trying fallback to make", error!.Message);
 
@@ -34,5 +34,5 @@ if (!Makefile.TryParse(fileSystem.File, out var makefile, out var error))
     return await fallbackParse.InvokeAsync();
 }
 
-var context = new TellContext(fileSystem.WorkingDir, makefile!);
-throw new InvalidOperationException("Parsing error handling was expected, got context: " + context);
+var makefile = makefileTree!.ToMakefile();
+throw new InvalidOperationException("Parsing error handling was expected, got makefile: " + makefile);

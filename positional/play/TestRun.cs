@@ -29,11 +29,11 @@ public class TellRun
         var workdir = initialParseResult.GetRequiredValue(WorkingDirectoryCli.CreateConditionalArgument);
         var filename = initialParseResult.GetRequiredValue(TellFilename.Option);
         var tellFiles = TellFileSystem.From(workdir, filename);
-        var tellContext = tellFiles.ToContext();
+        var makefile = MakefileTree.Load(tellFiles.File.Path).ToMakefile();
 
-        foreach (var rule in tellContext.Makefile.Rules.Values)
+        foreach (var rule in makefile.Rules.Values)
         {
-            var ruleCommand = new RuleInfoCommand(rule).MakeRuleCommand(rule, tellContext, (x) =>
+            var ruleCommand = new RuleInfoCommand(rule).MakeRuleCommand(rule, tellFiles.WorkingDir, (x) =>
             {
                 result = x;
                 Console.WriteLine(result);
@@ -43,7 +43,7 @@ public class TellRun
             rootCommand.Add(ruleCommand);
         }
 
-        rootCommand.SetDefaultSubcommand(tellContext.Makefile.FirstRule.Name);
+        rootCommand.SetDefaultSubcommand(makefile.FirstRule.Name);
 
         Console.WriteLine($"Initial parse result unmatched tokens: {String.Join(", ", initialParseResult.UnmatchedTokens)}");
 

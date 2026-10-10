@@ -27,13 +27,13 @@ var filename = initialParse.GetRequiredValue(TellFilename.Option);
 
 var folder = new Folder(".");
 var fs = TellFileSystem.From(folder, filename);
-var context = fs.ToContext();
+var makefile = MakefileTree.Load(fs.File.Path).ToMakefile();
 
-foreach (var rule in context.Makefile.Rules.Values)
+foreach (var rule in makefile.Rules.Values)
 {
     var ruleCommand = new RuleInfoCommand(rule);
 
-    ruleCommand.MakeRuleCommand(rule, context, runner.Run);
+    ruleCommand.MakeRuleCommand(rule, fs.WorkingDir, runner.Run);
 
     root.Add(ruleCommand);
 }

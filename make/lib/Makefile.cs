@@ -1,57 +1,17 @@
-﻿global using Superpower;
-global using Superpower.Model;
-global using Superpower.Parsers;
-global using Superpower.Tokenizers;
-global using System.CommandLine;
-
 namespace Tell;
 
 public record Makefile(
-    IReadOnlyList<DocFragment> Fragments,
     IReadOnlyDictionary<string, Rule> Rules,
     IReadOnlyDictionary<string, Assignment> Assignments
 )
 {
-    public static readonly TextParser<Makefile> Parser =
-        DocFragment.Parser.Many().Select(From);
-
-    public static Makefile Load(string path)
+    public static Makefile From(MakefileTree tree)
     {
-        if (!File.Exists(path)) throw new FileNotFoundException($"Makefile not found at `{path}`.");
-        var fileContent = File.ReadAllText(path);
-        var doc = Parser.Parse(fileContent);
-        return doc;
-    }
-
-    public static bool TryParse(Copaster.File file, out Makefile? makefile, out ParseException? error)
-    {
-        if (!file.Exists) throw new FileNotFoundException($"Makefile not found at `{file}`.");
-        var result = Parser.TryParse(file.Content);
-        if (result.HasValue)
-        {
-            makefile = result.Value;
-            error = null;
-            return true;
-        }
-        
-        makefile = null;
-        error = new ParseException(result.ToString(), result.ErrorPosition);
-        return false;
-    }
-
-    public static Makefile From(IReadOnlyList<DocFragment> fragments)
-    {
-        var rules = fragments
-            .Where(f => f.Rule is not null)
-            .Select(f => f.Rule!)
-            .ToDictionary(r => r.Target.Identifier.Value, r => r);
-
-        var assignments = fragments
-            .Where(f => f.Assignment is not null)
-            .Select(f => f.Assignment!)
-            .ToDictionary(a => a.Target.Value, a => a);
-
-        return new Makefile(fragments, rules, assignments);
+        var assignments = tree.Assignments.ToDictionary(assignment => assignment.Target.Value, assignment => assignment);
+        var rules = tree.Rules.ToDictionary(rule => rule.Name, rule => rule);
+        var finalizer = new RuleFinalizer(rules, assignments);
+        var finalizedRules = finalizer.FinalizeAll();
+        return new Makefile(finalizedRules, assignments);
     }
 
     public Rule GetRule(string name)

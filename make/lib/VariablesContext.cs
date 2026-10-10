@@ -15,11 +15,11 @@ public static class VariablesContextExtensions
 {
     public static VariablesContext ToVariablesContext(this RuleCommandBuildingParams parameters)
     {
-        var placeholders = RuleDependencyTraversal.Ordered(parameters.Doc, parameters.Rule)
+        var placeholders = parameters.Rule.RulesFromDependenciesAndBody
             .SelectMany(rule => rule.Placeholders)
             .DistinctBy(placeholder => placeholder.Identifier.Value);
             
         var varUseParams = VarUseCommandParams.From(placeholders);
-        return new(varUseParams, parameters.Doc.Assignments);
+        return new(varUseParams, parameters.Rule.Assignments);
     }
 }

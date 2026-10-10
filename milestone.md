@@ -5,7 +5,7 @@
   - [x] Positional Arguments
   - [x] Dependencies (`target: dep1 dep2`) Support
   - [ ] Fix Architecture:
-    - [ ] Split `Tree` level makefile representations and final (dependencies-aware) representations
+    - [x] Split `Tree` level makefile representations and final (dependencies-aware) representations
     - [ ] Extract cli-related commons (currently in make/lib/Commanding) to a dedicated module
       - [ ] `cli` -> `cli/app`
       - [ ] `make/lib/Commanding` -> `cli/lib`
