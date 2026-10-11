@@ -17,11 +17,25 @@ test: prepare
 
         var makefile = tree.ToMakefile();
         var build = makefile.GetRule("build");
-        var orderedRules = build.RulesFromDependenciesAndBody.Select(rule => rule.Name);
+        var orderedRules = build.DependenciesAndSelf.Select(rule => rule.Name);
 
         build.Name.ShouldBe(build.Name);
         build.RecipesFromDependenciesAndBody.Count.ShouldBe(3);
         build.Dependencies.Select(rule => rule.Name).ShouldBe(["prepare", "test"]);
         orderedRules.ShouldBe(["prepare", "test", "build"]);
+    }
+
+    [TestMethod]
+    public void TreeRejectsCircularDependencies()
+    {
+        var tree = MakefileTree.Parser.Parse("first: second\nsecond: first\n");
+        Should.Throw<Exception>(() => tree.ToMakefile());
+    }
+
+    [TestMethod]
+    public void TreeRejectsMissingDependencies()
+    {
+        var tree = MakefileTree.Parser.Parse("first: missing\n");
+        Should.Throw<Exception>(() => tree.ToMakefile());
     }
 }

@@ -12,15 +12,15 @@ public record Rule(
     public IEnumerable<Placeholder> Placeholders =>
         Recipes.SelectMany(recipe => recipe.Placeholders).DistinctBy(placeholder => placeholder.Identifier.Value);
 
-    public IReadOnlyList<Rule> RulesFromDependenciesAndBody =>
+    public IReadOnlyList<Rule> DependenciesAndSelf =>
         Dependencies
-            .SelectMany(dependency => dependency.RulesFromDependenciesAndBody)
+            .SelectMany(dependency => dependency.DependenciesAndSelf)
             .Append(this)
             .DistinctBy(rule => rule.Name)
             .ToArray();
 
     public IReadOnlyList<Recipe> RecipesFromDependenciesAndBody =>
-        RulesFromDependenciesAndBody.SelectMany(rule => rule.Recipes).ToArray();
+        DependenciesAndSelf.SelectMany(rule => rule.Recipes).ToArray();
 
     public override string ToString() =>
         $"{Target}: {string.Join(" ", Dependencies.Select(dependency => dependency.Name))}\n{string.Join("\n", Recipes.Select(recipe => $"  {recipe}"))}";

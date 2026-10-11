@@ -8,7 +8,7 @@ public record ReplacementSettings(string OriginalIdentifier, string KebabedIdent
 
     public static ReplacementSettings[] AllFor(Rule rule)
     {
-        var rules = rule.RulesFromDependenciesAndBody;
+        var rules = rule.DependenciesAndSelf;
         var placeholders = rules.SelectMany(dependency => dependency.Placeholders);
         return AllFor(placeholders, rule.Assignments);
     }

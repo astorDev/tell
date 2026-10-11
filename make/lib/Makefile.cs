@@ -22,10 +22,9 @@ public record Makefile(
     public static Makefile From(MakefileTree tree)
     {
         var assignments = tree.Assignments.ToDictionary(assignment => assignment.Target.Value, assignment => assignment);
-        var rules = tree.Rules.ToDictionary(rule => rule.Name, rule => rule);
-        var finalizer = new RuleFinalizer(rules, assignments);
-        var finalizedRules = finalizer.FinalizeAll();
-        return new Makefile(finalizedRules, assignments);
+        var ruleTrees = tree.Rules.ToDictionary(rule => rule.Name);
+        var rules = RuleCollection.From(ruleTrees, assignments);
+        return new Makefile(rules, assignments);
     }
 
     public static bool TryParse(Copaster.File file, out Makefile? makefile, out ParseException? error)
@@ -42,4 +41,3 @@ public record Makefile(
 
     public Rule FirstRule => Rules.Values.FirstOrDefault() ?? throw new InvalidOperationException("No rules found in Makefile.");
 }
-
