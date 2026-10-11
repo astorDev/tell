@@ -14,4 +14,11 @@ public class TargetTests
         Console.WriteLine(target);
         target.Identifier.Value.ShouldBe("run");
     }
+
+    [TestMethod]
+    public void ParsesDependencies()
+    {
+        var target = Target.Parser.Parse("all: prepare build");
+        target.Dependencies.Select(dependency => dependency.Value).ShouldBe(["prepare", "build"]);
+    }
 }

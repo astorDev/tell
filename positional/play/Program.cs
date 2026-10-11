@@ -9,24 +9,24 @@ var app = builder.Build();
 
 var rootCommand = new Nishe.RootCommand("Positional play commands")
 {
-    WorkingDirectoryCli.CreateConditionalArgument,
+    WorkingDirectoryCli.ConditionalArgument,
     TellFilename.Option
 };
 
 var initialParseResult = rootCommand.Parse(args);
-var workdir = initialParseResult.GetRequiredValue(WorkingDirectoryCli.CreateConditionalArgument);
+var workdir = initialParseResult.GetRequiredValue(WorkingDirectoryCli.ConditionalArgument);
 var filename = initialParseResult.GetRequiredValue(TellFilename.Option);
 
 var filesystem = TellFileSystem.From(workdir, filename);
-var context = filesystem.ToContext();
+var makefile = Makefile.From(filesystem.File);
 
-foreach (var rule in context.Makefile.Rules.Values)
+foreach (var rule in makefile.Rules.Values)
 {
-    var ruleCommand = new RuleInfoCommand(rule).MakeRuleCommand(rule, context, Console.WriteLine);
+    var ruleCommand = new RuleInfoCommand(rule).MakeRuleCommand(rule, filesystem.WorkingDir, Console.WriteLine);
     rootCommand.Add(ruleCommand);
 }
 
-rootCommand.SetDefaultSubcommand(context.Makefile.FirstRule.Name);
+rootCommand.SetDefaultSubcommand(makefile.FirstRule.Name);
 
 var parsed = rootCommand.Parse(args);
 

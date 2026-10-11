@@ -1,6 +1,6 @@
 namespace Tell;
 
-public class RuleInfoCommand(Rule rule) : Command(NameFrom(rule), DescriptionFrom(rule.Recipes))
+public class RuleInfoCommand(Rule rule) : Command(rule.Name, DescriptionFrom(rule.Recipes))
 {
     public Rule Rule => rule;
 
@@ -12,10 +12,5 @@ public class RuleInfoCommand(Rule rule) : Command(NameFrom(rule), DescriptionFro
     {
         var recipeLines = recipes.Select(r => r.ToUnresolvedCommandString());
         return $"{DescriptionPrefix}{String.Join(DescriptionSeparator, recipeLines)}";
-    }
-
-    public static string NameFrom(Rule rule)
-    {
-        return rule.Target.Identifier.Value;
     }
 }

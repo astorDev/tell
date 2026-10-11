@@ -40,19 +40,17 @@ return await app.RunCliAsync(async (RuleRunner runner) =>
         return await fallbackParse.InvokeAsync();
     }
 
-    var context = new TellContext(fileSystem.WorkingDir, makefile!);
-
-    foreach (var rule in context.Makefile.Rules.Values)
+    foreach (var rule in makefile!.Rules.Values)
     {
         var ruleCommand = new RuleInfoCommand(rule);
         ruleCommand.AddLoggingCliOptions();
 
-        ruleCommand.MakeRuleCommand(rule, context, runner.Run);
+        ruleCommand.MakeRuleCommand(rule, fileSystem.WorkingDir, runner.Run);
 
         root.Add(ruleCommand);
     }
 
-    root.SetDefaultSubcommand(context.Makefile.FirstRule.Name);
+    root.SetDefaultSubcommand(makefile.FirstRule.Name);
 
     var parsed = root.Parse(args);
     return await parsed.InvokeAsync();

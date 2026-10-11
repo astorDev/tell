@@ -1,32 +1,39 @@
 ﻿namespace Tell;
 
 public record Rule(
-    Target Target,
-    Recipe[] Recipes
+    Identifier Target,
+    IReadOnlyList<Rule> Dependencies,
+    Recipe[] Recipes,
+    IReadOnlyDictionary<string, Assignment> Assignments
 )
 {
-    public static readonly Tokenizer<string> Tokenizer = 
-        new TokenizerBuilder<string>()
-            .MatchTarget()
-            .MatchRecipe()
-            .Build();
+    public string Name => Target.Value;
 
-    public static readonly TextParser<Rule> Parser =
-        from target in Target.Parser
-        from recipes in Recipe.Parser.Many()
-        select new Rule(target, recipes);
+    public static IReadOnlyDictionary<string, Rule> DictionaryFrom(
+        MakefileTree tree
+    )
+    {
+        var state = new RuleResolutionState();
 
-    public const string TokenKind = "Rule";
-    public static readonly TextParser<TextSpan> SpanParser = Span.MatchedBy(Parser);
+        foreach (var ruleTree in tree.RuleTrees.Values) 
+            RuleResolver.Resolve(ruleTree, tree, state);
 
-    public string Name => Target.Identifier.Value;
-    public IEnumerable<Placeholder> Placeholders => Recipes.SelectMany(r => r.Placeholders).DistinctBy(p => p.Identifier.Value);
+        return state.ResolvedRules;
+    }
 
-    override public string ToString() => $"{Target}\n{string.Join("\n", Recipes.Select(r => $"  {r}"))}";
-}
+    public IEnumerable<Placeholder> Placeholders =>
+        Recipes.SelectMany(recipe => recipe.Placeholders).DistinctBy(placeholder => placeholder.Identifier.Value);
 
-public static class RuleExtensions
-{
-    public static TokenizerBuilder<T> MatchRule<T>(this TokenizerBuilder<T> builder, T kind) => builder.Match(Rule.SpanParser, kind);
-    public static TokenizerBuilder<string> MatchRule(this TokenizerBuilder<string> builder) => builder.MatchRule(Rule.TokenKind);
+    public IReadOnlyList<Rule> DependenciesAndSelf =>
+        Dependencies
+            .SelectMany(dependency => dependency.DependenciesAndSelf)
+            .Append(this)
+            .DistinctBy(rule => rule.Name)
+            .ToArray();
+
+    public IReadOnlyList<Recipe> RecipesFromDependenciesAndBody =>
+        DependenciesAndSelf.SelectMany(rule => rule.Recipes).ToArray();
+
+    public override string ToString() =>
+        $"{Target}: {string.Join(" ", Dependencies.Select(dependency => dependency.Name))}\n{string.Join("\n", Recipes.Select(recipe => $"  {recipe}"))}";
 }

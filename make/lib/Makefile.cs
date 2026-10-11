@@ -1,57 +1,38 @@
-﻿global using Superpower;
-global using Superpower.Model;
-global using Superpower.Parsers;
-global using Superpower.Tokenizers;
-global using System.CommandLine;
-
 namespace Tell;
 
 public record Makefile(
-    IReadOnlyList<DocFragment> Fragments,
     IReadOnlyDictionary<string, Rule> Rules,
     IReadOnlyDictionary<string, Assignment> Assignments
 )
 {
-    public static readonly TextParser<Makefile> Parser =
-        DocFragment.Parser.Many().Select(From);
-
-    public static Makefile Load(string path)
+    public static Makefile From(Copaster.File file)
     {
-        if (!File.Exists(path)) throw new FileNotFoundException($"Makefile not found at `{path}`.");
-        var fileContent = File.ReadAllText(path);
-        var doc = Parser.Parse(fileContent);
-        return doc;
+        var tree = MakefileElement.Parsing(file).Thrown();
+        return From(tree);
+    }
+
+    public static Makefile Parse(string fileContent)
+    {
+        var tree = MakefileElement.Parser.Parse(fileContent);
+        return From(tree);
+    }
+
+    public static Makefile From(MakefileElement parsed)
+    {
+        var tree = MakefileTree.From(parsed);
+        return From(tree);
+    }
+
+    public static Makefile From(MakefileTree tree)
+    {
+        var rules = Rule.DictionaryFrom(tree);
+        return new Makefile(rules, tree.Assignments);
     }
 
     public static bool TryParse(Copaster.File file, out Makefile? makefile, out ParseException? error)
     {
-        if (!file.Exists) throw new FileNotFoundException($"Makefile not found at `{file}`.");
-        var result = Parser.TryParse(file.Content);
-        if (result.HasValue)
-        {
-            makefile = result.Value;
-            error = null;
-            return true;
-        }
-        
-        makefile = null;
-        error = new ParseException(result.ToString(), result.ErrorPosition);
-        return false;
-    }
-
-    public static Makefile From(IReadOnlyList<DocFragment> fragments)
-    {
-        var rules = fragments
-            .Where(f => f.Rule is not null)
-            .Select(f => f.Rule!)
-            .ToDictionary(r => r.Target.Identifier.Value, r => r);
-
-        var assignments = fragments
-            .Where(f => f.Assignment is not null)
-            .Select(f => f.Assignment!)
-            .ToDictionary(a => a.Target.Value, a => a);
-
-        return new Makefile(fragments, rules, assignments);
+        var parsing = MakefileElement.Parsing(file);
+        return parsing.AsClassicTry(From, out makefile, out error);
     }
 
     public Rule GetRule(string name)

@@ -30,9 +30,9 @@ public class FallbackTests
     }
 
     [DataTestMethod]
-    [DataRow("cli/examples --file deps.Makefile meet --name=Egor", "-C cli/examples -f deps.Makefile meet NAME=Egor")]
-    [DataRow("cli --file examples/deps.Makefile meet --name=Egor", "-C cli -f examples/deps.Makefile meet NAME=Egor")]
-    [DataRow("--file cli/examples/deps.Makefile meet --name=Egor", "-C . -f cli/examples/deps.Makefile meet NAME=Egor")]
+    [DataRow("cli/app/examples --file deps.Makefile meet --name=Egor", "-C cli/app/examples -f deps.Makefile meet NAME=Egor")]
+    [DataRow("cli/app --file examples/deps.Makefile meet --name=Egor", "-C cli/app -f examples/deps.Makefile meet NAME=Egor")]
+    [DataRow("--file cli/app/examples/deps.Makefile meet --name=Egor", "-C . -f cli/app/examples/deps.Makefile meet NAME=Egor")]
     public void CreatesFallbackArgumentsFromCommandLine(string original, string fallback)
     {
         var root = new Nishe.RootCommand("FallbackTest -> CreatesFallbackArgumentsFromCommandLine")

@@ -3,7 +3,7 @@
 - [ ] Core Functionality
   - [x] Basic Rules Execution
   - [x] Positional Arguments
-  - [ ] Dependencies (`target: dep1 dep2`) Support
+  - [x] Dependencies (`target: dep1 dep2`) Support
   - [ ] Documentation
 - [ ] Unsupported Make Functionality Handling
   - [x] Fallback to make
