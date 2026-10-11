@@ -1,3 +1,0 @@
-using Copaster;
-
-namespace Tell;
