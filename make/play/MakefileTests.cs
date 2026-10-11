@@ -17,10 +17,10 @@ test: prepare
 
         var makefile = tree.ToMakefile();
         var build = makefile.GetRule("build");
-        var orderedRules = makefile.Rules[build].RulesFromDependenciesAndBody.Select(rule => rule.Name);
+        var orderedRules = build.RulesFromDependenciesAndBody.Select(rule => rule.Name);
 
-        makefile.Rules["build"].Name.ShouldBe(build.Name);
-        makefile.Rules[build].RecipesFromDependenciesAndBody.Count.ShouldBe(3);
+        build.Name.ShouldBe(build.Name);
+        build.RecipesFromDependenciesAndBody.Count.ShouldBe(3);
         build.Dependencies.Select(rule => rule.Name).ShouldBe(["prepare", "test"]);
         orderedRules.ShouldBe(["prepare", "test", "build"]);
     }

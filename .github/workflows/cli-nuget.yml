@@ -16,5 +16,5 @@ jobs:
     steps:
       - uses: astorDev/versy/calver/nuget@main
         with:
-          project: cli/Tell.Cli
+          project: cli/app/Tell.Cli
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}

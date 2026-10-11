@@ -8,5 +8,5 @@
     <Project Path="small/fallback/play/Tell.Fallback.Playground.csproj" />
     <Project Path="superpower/lib/Tell.Superpower.csproj" />
     <Project Path="superpower/play/Tell.Superpower.Playground.csproj" />
-    <Project Path="cli/Tell.Cli.csproj" />
+    <Project Path="cli/app/Tell.Cli.csproj" />
 </Solution>

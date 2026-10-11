@@ -32,10 +32,10 @@ shared:
     [DataRow("shared", new string[] { "echo shared Egor" })]
     public void BuildsCommandsForTarget(string targetName, string[] expectedCommands)
     {
-        var makefile = Makefile.Parser.Parse(MakefileContent);
-        var target = makefile.GetRule(targetName);
+        var makefile = Makefile.Parse(MakefileContent);
+        var rule = makefile.GetRule(targetName);
         var variables = makefile.Assignments.TransformVariables(new Dictionary<string, string>());
-        var commands = RecipeCommands.From(makefile, target, variables);
+        var commands = RecipeCommands.From(rule, variables);
         commands.ShouldBe(expectedCommands);
     }
 }

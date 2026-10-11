@@ -22,9 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\make\lib\Tell.Makefile.csproj" />
-    <ProjectReference Include="..\positional\lib\Tell.Positional.csproj" />
-    <ProjectReference Include="..\small\fallback\lib\Tell.Fallback.csproj" />
+    <ProjectReference Include="..\..\make\lib\Tell.Makefile.csproj" />
+    <ProjectReference Include="..\..\positional\lib\Tell.Positional.csproj" />
+    <ProjectReference Include="..\..\small\fallback\lib\Tell.Fallback.csproj" />
   </ItemGroup>
 
 </Project>

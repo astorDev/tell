@@ -7,7 +7,7 @@
   - [ ] Fix Architecture:
     - [x] Split `Tree` level makefile representations and final (dependencies-aware) representations
     - [ ] Extract cli-related commons (currently in make/lib/Commanding) to a dedicated module
-      - [ ] `cli` -> `cli/app`
+      - [x] `cli` -> `cli/app`
       - [ ] `make/lib/Commanding` -> `cli/lib`
     - [x] In `make` create sophisticated e2e tests, DataRow-based tests: makefile (could be one for all) + target -> command to be run
   - [ ] Documentation

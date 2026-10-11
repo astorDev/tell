@@ -13,6 +13,12 @@ public record Makefile(
         return From(tree);
     }
 
+    public static Makefile Parse(string fileContent)
+    {
+        var tree = MakefileTree.Parser.Parse(fileContent);
+        return From(tree);
+    }
+
     public static Makefile From(MakefileTree tree)
     {
         var assignments = tree.Assignments.ToDictionary(assignment => assignment.Target.Value, assignment => assignment);
