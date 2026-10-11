@@ -32,3 +32,8 @@ full-pr:
 	git save "$(TITLE)"
 	gh pr create --title "$(TITLE)" --body "" || true
 	gh pr view --web
+
+all-tests:
+	tell small/fallback/play test
+	tell make/play test
+	tell positional/play test
