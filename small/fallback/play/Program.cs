@@ -22,7 +22,7 @@ var workdir = initialParse.GetRequiredValue(WorkingDirectoryCli.ConditionalArgum
 var filename = initialParse.GetRequiredValue(TellFilename.Option);
 var fileSystem = TellFileSystem.From(workdir, filename);
 
-if (!MakefileTree.TryParse(fileSystem.File, out var makefileTree, out var error))
+if (!MakefileSyntax.TryParse(fileSystem.File, out var makefileTree, out var error))
 {
     app.Logger.LogWarning("Failed to parse Makefile: {error}. Trying fallback to make", error!.Message);
 

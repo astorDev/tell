@@ -1,5 +1,3 @@
-using Copaster;
-
 namespace Tell;
 
 public record Makefile(
@@ -9,27 +7,31 @@ public record Makefile(
 {
     public static Makefile From(Copaster.File file)
     {
-        var tree = MakefileTree.Parsing(file).Thrown();
+        var tree = MakefileSyntax.Parsing(file).Thrown();
         return From(tree);
     }
 
     public static Makefile Parse(string fileContent)
     {
-        var tree = MakefileTree.Parser.Parse(fileContent);
+        var tree = MakefileSyntax.Parser.Parse(fileContent);
+        return From(tree);
+    }
+
+    public static Makefile From(MakefileSyntax parsed)
+    {
+        var tree = MakefileTree.From(parsed);
         return From(tree);
     }
 
     public static Makefile From(MakefileTree tree)
     {
-        var assignments = tree.Assignments.ToDictionary(assignment => assignment.Target.Value, assignment => assignment);
-        var ruleTrees = tree.Rules.ToDictionary(rule => rule.Name);
-        var rules = RuleCollection.From(ruleTrees, assignments);
-        return new Makefile(rules, assignments);
+        var rules = Rule.DictionaryFrom(tree);
+        return new Makefile(rules, tree.Assignments);
     }
 
     public static bool TryParse(Copaster.File file, out Makefile? makefile, out ParseException? error)
     {
-        var parsing = MakefileTree.Parsing(file);
+        var parsing = MakefileSyntax.Parsing(file);
         return parsing.AsClassicTry(From, out makefile, out error);
     }
 

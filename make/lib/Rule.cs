@@ -9,6 +9,18 @@ public record Rule(
 {
     public string Name => Target.Value;
 
+    public static IReadOnlyDictionary<string, Rule> DictionaryFrom(
+        MakefileTree tree
+    )
+    {
+        var state = new RuleResolutionState();
+
+        foreach (var ruleTree in tree.RuleTrees.Values) 
+            RuleResolver.Resolve(ruleTree, tree, state);
+
+        return state.ResolvedRules;
+    }
+
     public IEnumerable<Placeholder> Placeholders =>
         Recipes.SelectMany(recipe => recipe.Placeholders).DistinctBy(placeholder => placeholder.Identifier.Value);
 
