@@ -15,7 +15,7 @@ public class RuleRunner(RecipeRunner recipeRunner)
 
     public async Task Run(RuleRunParams parameters)
     {
-        var commandsToRun = RecipeCommands.From(parameters.Rule, parameters.Replacements);
+        var commandsToRun = parameters.Rule.RecipesFromDependenciesAndBody.Select(r => r.ToCommandString(parameters.Replacements));
         foreach (var command in commandsToRun)
         {
             using var process = await recipeRunner.Run(command, parameters.WorkingDirectory.FullPath);

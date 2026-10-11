@@ -17,7 +17,7 @@ run:
     echo "Done. Used: $$(NAME), $$(ENV)"
 """;
 
-        var tokens = RuleTree.Tokenizer.Tokenize(example);
+        var tokens = RuleElement.Tokenizer.Tokenize(example);
         foreach (var token in tokens) Console.WriteLine(token);
     }
 
@@ -32,7 +32,7 @@ run:
     echo "Done. Used: $$(NAME), $$(ENV)"
 """;
 
-        var rule = RuleTree.Parser.Parse(example);
+        var rule = RuleElement.Parser.Parse(example);
         Console.WriteLine(rule);
         foreach (var recipe in rule.Recipes)
         {

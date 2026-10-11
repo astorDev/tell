@@ -6,7 +6,7 @@ public class MakefileTests
     [TestMethod]
     public void TreeFinalizesDependencyOrder()
     {
-        var tree = MakefileSyntax.Parser.Parse("""
+        var tree = MakefileElement.Parser.Parse("""
 build: prepare test
     echo build
 prepare:
@@ -28,14 +28,14 @@ test: prepare
     [TestMethod]
     public void TreeRejectsCircularDependencies()
     {
-        var tree = MakefileSyntax.Parser.Parse("first: second\nsecond: first\n");
+        var tree = MakefileElement.Parser.Parse("first: second\nsecond: first\n");
         Should.Throw<Exception>(() => tree.ToMakefile());
     }
 
     [TestMethod]
     public void TreeRejectsMissingDependencies()
     {
-        var tree = MakefileSyntax.Parser.Parse("first: missing\n");
+        var tree = MakefileElement.Parser.Parse("first: missing\n");
         Should.Throw<Exception>(() => tree.ToMakefile());
     }
 }

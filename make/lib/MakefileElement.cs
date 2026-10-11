@@ -6,37 +6,37 @@ global using System.CommandLine;
 
 namespace Tell;
 
-public record MakefileSyntax(
+public record MakefileElement(
     IReadOnlyList<DocFragment> Fragments
 )
 {
-    public static readonly TextParser<MakefileSyntax> Parser =
+    public static readonly TextParser<MakefileElement> Parser =
         DocFragment.Parser.Many().Select(From);
 
-    public static MakefileSyntax Load(string path)
+    public static MakefileElement Load(string path)
     {
         if (!File.Exists(path)) throw new FileNotFoundException($"Makefile not found at `{path}`.");
         var fileContent = File.ReadAllText(path);
         return Parser.Parse(fileContent);
     }
 
-    public static Result<MakefileSyntax> Parsing(Copaster.File file)
+    public static Result<MakefileElement> Parsing(Copaster.File file)
     {
         if (!file.Exists) throw new FileNotFoundException($"Makefile not found at `{file}`.");
         return Parser.TryParse(file.Content);
     }
 
-    public static bool TryParse(Copaster.File file, out MakefileSyntax? makefile, out ParseException? error)
+    public static bool TryParse(Copaster.File file, out MakefileElement? makefile, out ParseException? error)
     {
         var result = Parsing(file);
         return result.AsClassicTry(out makefile, out error);
     }
 
-    public static MakefileSyntax From(IReadOnlyList<DocFragment> fragments) => new(fragments);
+    public static MakefileElement From(IReadOnlyList<DocFragment> fragments) => new(fragments);
 
     public Makefile ToMakefile() => Makefile.From(this);
 
-    public IEnumerable<RuleTree> Rules =>
+    public IEnumerable<RuleElement> Rules =>
         Fragments
             .Where(fragment => fragment.RuleTree is not null)
             .Select(fragment => fragment.RuleTree!);

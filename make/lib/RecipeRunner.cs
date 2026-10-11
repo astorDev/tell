@@ -12,16 +12,7 @@ public class RecipeRunner(ILogger<RecipeRunner> logger)
 
         var interpolated = recipe.ToCommandString(variables);
 
-        logger.LogDebug("Running built command in `{WorkingDirectory}`:", workingDirectory);
-        logger.LogInformation("{Interpolated}", interpolated);
-
-        var startInfo = Shell.Sh.ProxyProcessStartInfo(interpolated);
-        startInfo.WorkingDirectory = workingDirectory;
-        
-        Console.Write(SelectGraphicRendition.Dim);
-        var result = await startInfo.Run();
-        Console.Write(SelectGraphicRendition.NormalIntensity);
-        return result;
+        return await Run(interpolated, workingDirectory);
     }
 
     public async Task<Process> Run(string recipeCommand, string workingDirectory)

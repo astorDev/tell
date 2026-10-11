@@ -1,6 +1,6 @@
 ﻿namespace Tell;
 
-public record RuleTree(Target Target, Recipe[] Recipes)
+public record RuleElement(Target Target, Recipe[] Recipes)
 {
     public static readonly Tokenizer<string> Tokenizer =
         new TokenizerBuilder<string>()
@@ -8,10 +8,10 @@ public record RuleTree(Target Target, Recipe[] Recipes)
             .MatchRecipe()
             .Build();
 
-    public static readonly TextParser<RuleTree> Parser =
+    public static readonly TextParser<RuleElement> Parser =
         from target in Target.Parser
         from recipes in Recipe.Parser.Many()
-        select new RuleTree(target, recipes);
+        select new RuleElement(target, recipes);
 
     public const string TokenKind = "Rule";
     public static readonly TextParser<TextSpan> SpanParser = Span.MatchedBy(Parser);
@@ -24,8 +24,8 @@ public record RuleTree(Target Target, Recipe[] Recipes)
 public static class RuleTreeExtensions
 {
     public static TokenizerBuilder<T> MatchRuleTree<T>(this TokenizerBuilder<T> builder, T kind) =>
-        builder.Match(RuleTree.SpanParser, kind);
+        builder.Match(RuleElement.SpanParser, kind);
 
     public static TokenizerBuilder<string> MatchRuleTree(this TokenizerBuilder<string> builder) =>
-        builder.MatchRuleTree(RuleTree.TokenKind);
+        builder.MatchRuleTree(RuleElement.TokenKind);
 }

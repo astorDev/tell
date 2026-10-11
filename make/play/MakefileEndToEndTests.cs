@@ -35,7 +35,7 @@ shared:
         var makefile = Makefile.Parse(MakefileContent);
         var rule = makefile.GetRule(targetName);
         var variables = makefile.Assignments.TransformVariables(new Dictionary<string, string>());
-        var commands = RecipeCommands.From(rule, variables);
+        var commands = rule.RecipesFromDependenciesAndBody.Select(r => r.ToCommandString(variables));
         commands.ShouldBe(expectedCommands);
     }
 }

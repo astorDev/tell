@@ -7,17 +7,17 @@ public record Makefile(
 {
     public static Makefile From(Copaster.File file)
     {
-        var tree = MakefileSyntax.Parsing(file).Thrown();
+        var tree = MakefileElement.Parsing(file).Thrown();
         return From(tree);
     }
 
     public static Makefile Parse(string fileContent)
     {
-        var tree = MakefileSyntax.Parser.Parse(fileContent);
+        var tree = MakefileElement.Parser.Parse(fileContent);
         return From(tree);
     }
 
-    public static Makefile From(MakefileSyntax parsed)
+    public static Makefile From(MakefileElement parsed)
     {
         var tree = MakefileTree.From(parsed);
         return From(tree);
@@ -31,7 +31,7 @@ public record Makefile(
 
     public static bool TryParse(Copaster.File file, out Makefile? makefile, out ParseException? error)
     {
-        var parsing = MakefileSyntax.Parsing(file);
+        var parsing = MakefileElement.Parsing(file);
         return parsing.AsClassicTry(From, out makefile, out error);
     }
 

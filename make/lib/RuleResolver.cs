@@ -2,7 +2,7 @@ namespace Tell;
 
 public class RuleResolver
 {
-    public static Rule Resolve(RuleTree tree, MakefileTree inputs, RuleResolutionState state)
+    public static Rule Resolve(RuleElement tree, MakefileTree inputs, RuleResolutionState state)
     {
         if (state.TryGetResolvedRule(tree.Name, out var rule)) 
         {
@@ -12,14 +12,14 @@ public class RuleResolver
         return AddResolvedRule(tree, inputs, state);
     }
 
-    public static Rule AddResolvedRule(RuleTree tree, MakefileTree inputs, RuleResolutionState state)
+    public static Rule AddResolvedRule(RuleElement tree, MakefileTree inputs, RuleResolutionState state)
     {
         if (!state.TryBeginResolving(tree.Name)) throw new InvalidOperationException($"Circular dependency detected for rule '{tree.Name}'.");
         try { return ResolveAndStore(tree, inputs, state); }
         finally { state.EndResolving(tree.Name); }
     }
 
-    public static Rule ResolveAndStore(RuleTree tree, MakefileTree inputs, RuleResolutionState state)
+    public static Rule ResolveAndStore(RuleElement tree, MakefileTree inputs, RuleResolutionState state)
     {
         var dependencies = ResolveDependencies(tree, inputs, state);
         var rule = new Rule(tree.Target.Identifier, dependencies, tree.Recipes, inputs.Assignments);
@@ -27,10 +27,10 @@ public class RuleResolver
         return rule;
     }
 
-    public static List<Rule> ResolveDependencies(RuleTree tree, MakefileTree inputs, RuleResolutionState state) =>
+    public static List<Rule> ResolveDependencies(RuleElement tree, MakefileTree inputs, RuleResolutionState state) =>
         tree.Target.Dependencies.Select(dependency => ResolveDependency(tree, dependency, inputs, state)).ToList();
 
-    public static Rule ResolveDependency(RuleTree tree, Identifier dependency, MakefileTree inputs, RuleResolutionState state)
+    public static Rule ResolveDependency(RuleElement tree, Identifier dependency, MakefileTree inputs, RuleResolutionState state)
     {
         if (!inputs.RuleTrees.TryGetValue(dependency.Value, out var candidate))
             throw new InvalidOperationException($"Dependency `{dependency.Value}` for rule `{tree.Name}` not found in Makefile.");
