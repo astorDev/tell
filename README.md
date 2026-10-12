@@ -1,8 +1,14 @@
-# Tell - Make Util V2
+# Tell - Command Runner
 
-[Makefile is awesome](./make/article/index.md) for defining project-specific scripts. Make util makes those scripts runnable. It works fine. However, the UX of the `make` util is just too old. That's where `tell` comes in. It addresses various `make` issues and extends its functionality. Specifically:
+Store your commonly used commands in a `Makefile`. Simply `tell` your shell to execute them by their name:
 
-- [📁 positional](./positional/README.md): Utilizes Positional Arguments for working directory and first rule variable.
+> [Why do I need that?](#why-do-i-need-a-command-runner)
+
+![](demo.png)
+
+Read the [Getting Started Section](#getting-started) to figure out how to use make.
+
+`tell` is heavily inspired by `make`. In fact, `tell` inherits it's file format from `make`. If you have a `Makefile` already, you can get all the [improvements of tell over make](#comparison-to-make), without changing a line of your `Makefile`.
 
 ## Installation
 
@@ -11,3 +17,9 @@ Via dotnet tools:
 ```sh
 dotnet tool install --global Tell.Cli
 ```
+
+## Why Do You Need a Command Runner?
+
+## Getting Started
+
+## Comparison to Make
