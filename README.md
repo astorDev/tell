@@ -1,12 +1,11 @@
 # Tell - Command Runner
 
-Store your commonly used commands in a `Makefile`. Simply `tell` your shell to execute them by their name:
 
-> [Why do I need that?](#why-do-i-need-a-command-runner)
+Save commonly used commands in a projects `Makefile`. Simply `tell` to execute them by name:
 
-![](demo.png)
+![](cli/examples/demo/makefile-and-calls.png)
 
-Read the [Getting Started Section](#getting-started) to figure out how to use make.
+> 🤔 [Why?](#why-do-you-need-a-command-runner) |  [How?](#getting-started)
 
 `tell` is heavily inspired by `make`. In fact, `tell` inherits it's file format from `make`. If you have a `Makefile` already, you can get all the [improvements of tell over make](#comparison-to-make), without changing a line of your `Makefile`.
 

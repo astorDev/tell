@@ -1,6 +1,6 @@
 namespace Tell;
 
-public class RuleInfoCommand(Rule rule) : Command(rule.Name, DescriptionFrom(rule.Recipes))
+public class RuleInfoCommand(Rule rule) : Command(rule.Name, DescriptionFrom(rule.RecipesFromDependenciesAndBody))
 {
     public Rule Rule => rule;
 
