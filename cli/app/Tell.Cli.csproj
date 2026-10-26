@@ -7,13 +7,15 @@
     <Nullable>enable</Nullable>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>tell</ToolCommandName>
+    <AssemblyName>tell</AssemblyName>
+    <PackageId>Tell.Cli</PackageId>
     <RootNamespace>Tell</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Hesive.Apps" Version="2026.109.126.4" />
     <PackageReference Include="NiceShell.Cli" Version="2026.109.127.20" />
-    <PackageReference Include="NiceShell.Logger" Version="2026.109.119.9" />
+    <PackageReference Include="NiceShell.Logger" Version="2026.110.126.13" />
   </ItemGroup>
 
   <ItemGroup>
