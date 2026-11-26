@@ -6,5 +6,7 @@ run:
 
 smoke:
 	tell run
+	tell run --args "../.. Hi Angela"
+	tell run --args "--verbose"
 	tell run --args "--help"
 	tell run --args "farewell"

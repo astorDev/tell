@@ -1,5 +1,5 @@
 # Tell Miniapps Template App
 
-This is an app, serving as executable for tell miniapps. It acts just like main `tell` cli, but always takes a predefined `Makefile` (the one in the same folder as the executable). 
+The application is a template for all miniapps created with tell. It repeats behaviour of tell, but with static Makefile (found in the location relative to the executable itself).
 
-`Makefile` is assumed to be validated before creating a miniapp, therefore it does not have fallback support, like the main util does.
+A miniapp will only be created with valid makefile paired, so fallback logic is not needed for this app.
