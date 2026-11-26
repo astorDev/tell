@@ -1,23 +1,39 @@
-using Microsoft.Extensions.Logging;
+using Copaster;
+using Microsoft.Extensions.DependencyInjection;
+using Tell;
 
 var builder = new AppBuilder();
 
+builder.Configuration.AddLoggingCliOptions(args);
 builder.Logging.AddNiceShell();
+
+builder.Services.AddSingleton<RuleRunner>();
+builder.Services.AddSingleton<RecipeRunner>();
 
 var app = builder.Build();
 
-var file = Path.Combine(AppContext.BaseDirectory, "Makefile");
-
-return await app.RunCliAsync(async (ILogger<Program> logger) =>
+return await app.RunCliAsync(async (RuleRunner runner) =>
 {
-    var makefileContent = File.ReadAllText(file);
-    
-    logger.LogInformation("Makefile content:\n {content}", makefileContent);
-    logger.LogInformation("Working directory: {cwd}", Directory.GetCurrentDirectory());
-    foreach (var arg in args)
+    var root = new Nishe.RootCommand("Executes commands defined in the bundled Makefile")
     {
-        logger.LogInformation("Argument: {arg}", arg);
+        WorkingDirectoryCli.ConditionalArgument,
+    };
+
+    root.AddLoggingCliOptions();
+
+    var workdir = root.Parse(args).GetRequiredValue(WorkingDirectoryCli.ConditionalArgument);
+    var file = new Folder(AppContext.BaseDirectory).File("Makefile");
+    var makefile = Makefile.From(file);
+
+    foreach (var rule in makefile.Rules.Values)
+    {
+        var ruleCommand = new RuleInfoCommand(rule);
+        ruleCommand.AddLoggingCliOptions();
+        ruleCommand.MakeRuleCommand(rule, workdir, runner.Run);
+        root.Add(ruleCommand);
     }
 
-    throw new NotImplementedException();
+    root.SetDefaultSubcommand(makefile.FirstRule.Name);
+
+    return await root.Parse(args).InvokeAsync();
 });

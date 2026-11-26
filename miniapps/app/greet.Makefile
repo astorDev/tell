@@ -6,3 +6,6 @@ greet:
 	echo "A little info about cwd:"
 	ls
 	pwd
+
+farewell:
+	echo "Goodbye, $(NAME)!"

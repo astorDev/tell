@@ -8,12 +8,21 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>tell-miniapp</ToolCommandName>
     <RootNamespace>Tell</RootNamespace>
+    
+    <!-- MacOS kills executables ending with .App, so we set assembly name to match the tool command name -->
+    <AssemblyName>tell-miniapp</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Hesive.Apps" Version="2026.109.126.4" />
     <PackageReference Include="NiceShell.Cli" Version="2026.109.127.20" />
     <PackageReference Include="NiceShell.Logger" Version="2026.110.126.13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\make\lib\Tell.Makefile.csproj" />
+    <ProjectReference Include="..\..\cli\lib\Tell.Cli.Lib.csproj" />
+    <ProjectReference Include="..\..\positional\lib\Tell.Positional.csproj" />
   </ItemGroup>
 
   <ItemGroup>
