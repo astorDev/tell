@@ -22,3 +22,9 @@ smoke:
 	tell run "install ../app/greet.Makefile greeter"
 	greeter
 	greeter ../../../ Servus Egor
+
+path:
+	echo $$PATH | tr ':' '\n'
+
+search-path:
+	echo $$PATH | tr ':' '\n' | grep 'miniapps'
