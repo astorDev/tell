@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>tell-miniapp</ToolCommandName>
+    <RootNamespace>Tell</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NiceShell.Cli" Version="2026.108.104.12" />
+    <PackageReference Include="NiceShell.Logger" Version="2026.109.105.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.CommandLine" />
+    <Using Include="NiceShell" />
+    <Using Include="Tell" />
+  </ItemGroup>
+
+</Project>

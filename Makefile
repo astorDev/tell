@@ -9,6 +9,10 @@ cli-play:
 	dotnet new cli-play --name Tell.$(MODULE) --output `cameled $(MODULE)/play`
 	copaster-magic `cameled $(MODULE)/play` --command $(COMMAND)
 
+new-cli:
+	dotnet new cli --name Tell.$(MODULE) --output `cameled $(MODULE)/cli`
+	copaster-magic `cameled $(MODULE)/cli` --project=Tell --command $(COMMAND)
+
 lib-n-play:
 	tell lib $(MODULE)
 	tell cli-play $(MODULE)

@@ -11,4 +11,5 @@
     <Project Path="superpower/lib/Tell.Superpower.csproj" />
     <Project Path="superpower/play/Tell.Superpower.Playground.csproj" />
     <Project Path="cli/app/Tell.Cli.csproj" />
+    <Project Path="tell/miniapps/cli/Tell.Miniapps.Cli.csproj" />
 </Solution>
