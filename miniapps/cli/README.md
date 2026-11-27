@@ -17,7 +17,7 @@ tell-miniapp install <PATH_TO_MAKEFILE> <MINIAPP_ALIAS>
 ```
 
 - Command copies the Makefile and bundled [app template](../app/README.md) into `<APPS_FOLDER>/tell/miniapps/bundles/<MINIAPP_ALIAS>`
-- Creates a shlim, named `<MINIAPP_ALIAS>` in `<APPS_FOLDER>/miniapps/shims` and points it to the app template in `<APPS_FOLDER>/tell/miniapps/<MINIAPP_ALIAS>`.
+- Creates a shim named `<MINIAPP_ALIAS>` in `<APPS_FOLDER>/miniapps/shims` and points it to the app template in `<APPS_FOLDER>/tell/miniapps/bundles/<MINIAPP_ALIAS>`.
 
 ## APPS_FOLDER
 
