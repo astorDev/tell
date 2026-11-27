@@ -3,10 +3,10 @@
 This module is dedicated to using tell util for converting a Makefile into a persistent script. For example:
 
 ```sh
-tell install gitflow.Makefile gf
+tell-miniapp install gitflow.Makefile gf
 ```
 
-Would convert recipes from the `gitka.Makefile` into a `gf` util with rules as subcommands, which could be used like this:
+Would convert recipes from the `gitflow.Makefile` into a `gf` util with rules as subcommands, which could be used like this:
 
 ```sh
 gf pr
