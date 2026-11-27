@@ -18,8 +18,8 @@ reinstall:
 	make install
 
 smoke:
-	tell run "init"
-	tell run "install ../app/greet.Makefile greeter"
+	make run ARGS="init"
+	make run ARGS="install ../app/greet.Makefile greeter"
 	greeter
 	greeter ../../../ Servus Egor
 
