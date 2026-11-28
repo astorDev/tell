@@ -1,6 +1,6 @@
 # Tell Miniapps Cli
 
-> 💀 Skeleton
+> 💀 Skeleton - the README describes target state, not current. Source code serves as a template, not implementation.
 
 CLI for converting a `Makefile` into a global CLI command.
 
@@ -23,7 +23,19 @@ tell-miniapp install <PATH_TO_MAKEFILE> <MINIAPP_ALIAS>
 
 ## Distribution packaging
 
-The CLI distribution includes a prebuilt, self-contained app template executable for each supported runtime identifier: `osx-arm64`, `osx-x64`, `win-x64`, `linux-x64`, and `linux-arm64`. The `install` command uses the executable matching the current platform.
+The CLI is a .NET 11 RID-specific Native AOT tool. Its package for each supported RID includes the matching self-contained app template executable under `app-template/`. The .NET CLI selects the matching RID-specific tool package automatically when installing the top-level package.
+
+The supported RIDs are `osx-arm64`, `osx-x64`, `win-x64`, `linux-x64`, and `linux-arm64`. Native AOT requires publishing on the target OS; cross-architecture publishing requires the target toolchain.
+
+Build and install the local macOS ARM64 package with one command:
+
+```sh
+make install
+```
+
+This publishes the app template for `osx-arm64`, packs the RID-specific CLI package and the top-level pointer package, then installs from the local package directory. Pass `RID=<RID>` to build and install a different RID package on a compatible host.
+
+For distribution, run `make pack-rid RID=<RID>` on a compatible host for each RID, then run `make pack-pointer` once. All RID-specific packages must use the same version and be available before publishing the pointer package. A local macOS install only needs the `osx-arm64` package; CI or developers on other operating systems can build the remaining packages.
 
 ## APPS_FOLDER
 

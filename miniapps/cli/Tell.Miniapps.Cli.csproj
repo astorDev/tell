@@ -2,10 +2,12 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackAsTool>true</PackAsTool>
+    <PublishAot>true</PublishAot>
+    <ToolPackageRuntimeIdentifiers>osx-arm64;osx-x64;win-x64;linux-x64;linux-arm64</ToolPackageRuntimeIdentifiers>
     <ToolCommandName>tell-miniapp</ToolCommandName>
     <RootNamespace>Tell</RootNamespace>
   </PropertyGroup>
@@ -13,6 +15,18 @@
   <ItemGroup>
     <PackageReference Include="NiceShell.Cli" Version="2026.108.104.12" />
     <PackageReference Include="NiceShell.Logger" Version="2026.109.105.7" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(RuntimeIdentifier)' != '' and '$(RuntimeIdentifier)' != 'win-x64'">
+    <Content Include="../app/bin/Release/net11.0/$(RuntimeIdentifier)/publish/tell-miniapp"
+             Pack="true"
+             PackagePath="tools/any/$(RuntimeIdentifier)/app-template/" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+    <Content Include="../app/bin/Release/net11.0/win-x64/publish/tell-miniapp.exe"
+             Pack="true"
+             PackagePath="tools/any/win-x64/app-template/" />
   </ItemGroup>
 
   <ItemGroup>
